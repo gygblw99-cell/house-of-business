@@ -1,0 +1,28 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; font-family: var(--font-heebo), sans-serif; background: #050507; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.35); border-radius: 99px; }
+
+/* ── Accessibility widget ──────────────────────────────────────────
+   Toggled via AccessibilityWidget.tsx, which sets these on <html>. */
+body { zoom: var(--a11y-zoom, 1); }
+
+html[data-a11y-contrast] body,
+html[data-a11y-contrast] * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+html[data-a11y-contrast] a { color: #ffeb3b !important; }
+html[data-a11y-contrast] img { filter: grayscale(1) contrast(1.2); }
+
+html[data-a11y-underline-links] a { text-decoration: underline !important; }
+
+html[data-a11y-stop-animations] *,
+html[data-a11y-stop-animations] *::before,
+html[data-a11y-stop-animations] *::after {
+  animation: none !important;
+  transition: none !important;
+}

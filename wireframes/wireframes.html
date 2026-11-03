@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House of Business - Wireframes</title>
+<style>
+  /* === Brand Colors: Dark Green #1a4d2e | Gold #c9a227 === */
+  :root {
+    --green: #1a4d2e;
+    --green-dark: #0f2e1a;
+    --green-mid: #2d6e45;
+    --green-light: #e8f5ee;
+    --gold: #c9a227;
+    --gold-light: #fdf3d0;
+    --gold-dark: #9b7a1c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--green-dark);
+    display: flex;
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* Sidebar Navigation */
+  .sidebar {
+    width: 220px;
+    background: var(--green);
+    padding: 20px 12px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    border-left: 1px solid var(--green-mid);
+  }
+  .sidebar h2 {
+    color: var(--gold);
+    font-size: 13px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--green-mid);
+    text-align: center;
+  }
+  .sidebar-logo {
+    width: 80px;
+    display: block;
+    margin: 0 auto 10px;
+    filter: brightness(1.1);
+  }
+  .sidebar-group { margin-bottom: 14px; }
+  .sidebar-group-title {
+    color: var(--gold);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    padding-right: 8px;
+    opacity: 0.7;
+  }
+  .sidebar-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    color: #a7d4b8;
+    text-align: right;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    transition: all 0.15s;
+  }
+  .sidebar-btn:hover { background: var(--green-mid); color: #fff; }
+  .sidebar-btn.active { background: var(--gold); color: var(--green-dark); font-weight: 600; }
+
+  /* Override blue → green/gold brand */
+  .btn { background: var(--green) !important; }
+  .btn.outline { background: transparent !important; border-color: var(--green) !important; color: var(--green) !important; }
+  .btn.green { background: var(--green-mid) !important; }
+  .badge.blue { background: var(--gold-light) !important; color: var(--gold-dark) !important; }
+  .tab-item.active { color: var(--green) !important; }
+  .inner-tab.active { color: var(--green) !important; border-bottom-color: var(--green) !important; }
+  .conn-status.missing { background: #fed7d7 !important; color: #742a2a !important; }
+  .step-circle.active { background: var(--green) !important; }
+  .send-btn { background: var(--green) !important; }
+  .progress-bar-fill { background: var(--green-mid) !important; }
+  .bar.today { background: var(--green) !important; }
+  .bar { background: #b7dfc6 !important; }
+  .input-field:focus { border-color: var(--green) !important; outline: none; }
+  .toggle { background: var(--green) !important; }
+  .toggle.off { background: #e2e8f0 !important; }
+  .biz-type-card.selected { border-color: var(--green) !important; background: var(--green-light) !important; }
+  .qty-btn { background: var(--green-light) !important; color: var(--green) !important; }
+  .chat-bubble.user { background: var(--green) !important; }
+  .donut { background: conic-gradient(var(--green) 0% 35%, var(--gold) 35% 58%, #8fbe9f 58% 72%, #e53e3e 72% 85%, #a78bfa 85% 100%) !important; }
+
+  /* Main content */
+  .main {
+    margin-right: 220px;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px 20px;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  /* Phone frame */
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .screen-label {
+    color: #718096;
+    font-size: 12px;
+    text-align: center;
+  }
+  .phone {
+    width: 375px;
+    height: 720px;
+    background: #f7fafc;
+    border-radius: 40px;
+    border: 8px solid #2d3748;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    display: none;
+    flex-direction: column;
+  }
+  .phone.active { display: flex; }
+
+  /* Status bar */
+  .status-bar {
+    background: var(--green-dark);
+    padding: 8px 20px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #a7d4b8;
+    flex-shrink: 0;
+  }
+
+  /* Screen content */
+  .screen-content {
+    flex: 1;
+    overflow-y: auto;
+    background: #f0f4f8;
+  }
+  .screen-content::-webkit-scrollbar { width: 3px; }
+  .screen-content::-webkit-scrollbar-thumb { background: #cbd5e0; }
+
+  /* Top bar */
+  .top-bar {
+    background: var(--green);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--gold);
+    flex-shrink: 0;
+  }
+  .top-bar h1 { font-size: 17px; font-weight: 700; color: #fff; }
+  .top-bar .top-bar-sub { color: #a7d4b8; }
+  .top-bar-sub { font-size: 11px; color: #718096; }
+  .icon-btn {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+  }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .card-title {
+    font-size: 11px;
+    color: #718096;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .card-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a202c;
+  }
+  .card-value.green { color: var(--green-mid); }
+  .card-value.red { color: #e53e3e; }
+  .card-sub {
+    font-size: 11px;
+    color: #718096;
+    margin-top: 4px;
+  }
+
+  /* Stat row */
+  .stat-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 10px;
+    margin: 8px 0;
+  }
+  .stat-box {
+    flex: 1;
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  }
+  .stat-box .val { font-size: 18px; font-weight: 700; color: #2d3748; }
+  .stat-box .lbl { font-size: 10px; color: #718096; margin-top: 2px; }
+
+  /* Alert banner */
+  .alert {
+    margin: 8px 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert.warning { background: #fefcbf; color: #744210; border-right: 3px solid #d69e2e; }
+  .alert.danger { background: #fed7d7; color: #742a2a; border-right: 3px solid #e53e3e; }
+  .alert.info { background: #bee3f8; color: #1a365d; border-right: 3px solid #3182ce; }
+
+  /* List item */
+  .list-item {
+    background: #fff;
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f4f8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .list-item:last-child { border-bottom: none; }
+  .list-avatar {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: #e2e8f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .list-item-content { flex: 1; }
+  .list-item-title { font-size: 13px; font-weight: 600; color: #1a202c; }
+  .list-item-sub { font-size: 11px; color: #718096; margin-top: 2px; }
+  .badge {
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .badge.green { background: #c6f6d5; color: #276749; }
+  .badge.red { background: #fed7d7; color: #742a2a; }
+  .badge.yellow { background: #fefcbf; color: #744210; }
+  .badge.blue { background: #bee3f8; color: #1a365d; }
+  .badge.gray { background: #e2e8f0; color: #4a5568; }
+
+  /* Section header */
+  .section-header {
+    padding: 14px 14px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    background: #fff;
+    border-top: 2px solid var(--green-light);
+    display: flex;
+    padding: 8px 0 4px;
+    flex-shrink: 0;
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+  .tab-item.active { color: #3b82f6; }
+  .tab-item .tab-icon { font-size: 18px; }
+
+  /* Button */
+  .btn {
+    display: block;
+    width: calc(100% - 20px);
+    margin: 8px 10px;
+    padding: 13px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn.outline {
+    background: transparent;
+    border: 1.5px solid #3b82f6;
+    color: #3b82f6;
+  }
+  .btn.green { background: #38a169; }
+  .btn.gray { background: #e2e8f0; color: #4a5568; }
+
+  /* Input field */
+  .input-group { padding: 6px 10px; }
+  .input-label { font-size: 11px; color: #718096; margin-bottom: 4px; }
+  .input-field {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
+    background: #fff;
+    color: #2d3748;
+  }
+  .input-field.filled { background: #f7fafc; }
+
+  /* Chart placeholder */
+  .chart-placeholder {
+    background: #edf2f7;
+    border-radius: 10px;
+    height: 120px;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    padding: 0 10px;
+  }
+  .bar {
+    flex: 1;
+    background: #bee3f8;
+    border-radius: 4px 4px 0 0;
+  }
+  .bar.today { background: #3b82f6; }
+
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+  }
+  .progress-label { font-size: 12px; color: #4a5568; width: 80px; flex-shrink: 0; }
+  .progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill { height: 100%; border-radius: 4px; }
+  .progress-val { font-size: 11px; color: #718096; width: 45px; text-align: left; flex-shrink: 0; }
+
+  /* Divider */
+  .divider { height: 1px; background: #e2e8f0; margin: 4px 14px; }
+
+  /* Wizard step */
+  .wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #fff;
+    border-radius: 12px;
+    margin: 8px 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  }
+  .step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-circle.done { background: #c6f6d5; color: #276749; }
+  .step-circle.active { background: #3b82f6; color: #fff; }
+  .step-circle.pending { background: #e2e8f0; color: #718096; }
+  .step-content { flex: 1; }
+  .step-title { font-size: 13px; font-weight: 600; color: #1a202c; }
+  .step-sub { font-size: 11px; color: #718096; }
+
+  /* Chat bubble */
+  .chat-bubble {
+    max-width: 80%;
+    padding: 10px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 6px 12px;
+  }
+  .chat-bubble.bot {
+    background: #fff;
+    color: #2d3748;
+    border-radius: 16px 16px 16px 4px;
+    align-self: flex-start;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .chat-bubble.user {
+    background: #3b82f6;
+    color: #fff;
+    border-radius: 16px 16px 4px 16px;
+    margin-right: auto;
+    margin-left: 12px;
+  }
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    background: #f0f4f8;
+  }
+  .chat-input-row {
+    background: #fff;
+    padding: 10px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .chat-input {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #f7fafc;
+  }
+  .send-btn {
+    width: 36px; height: 36px;
+    background: #3b82f6;
+    border-radius: 50%;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .toggle-left { flex: 1; }
+  .toggle-title { font-size: 13px; color: #1a202c; }
+  .toggle-sub { font-size: 11px; color: #718096; }
+  .toggle {
+    width: 40px; height: 22px;
+    background: #3b82f6;
+    border-radius: 11px;
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .toggle.off { background: #e2e8f0; }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle:not(.off)::after { left: 20px; }
+
+  /* qty control */
+  .qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .qty-name { font-size: 13px; color: #1a202c; font-weight: 500; }
+  .qty-unit { font-size: 11px; color: #718096; }
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .qty-btn {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #edf2f7;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #2d3748;
+  }
+  .qty-val { font-size: 15px; font-weight: 700; width: 30px; text-align: center; }
+
+  /* Connection item */
+  .conn-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  }
+  .conn-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .conn-info { flex: 1; }
+  .conn-title { font-size: 13px; font-weight: 600; color: #1a202c; }
+  .conn-sub { font-size: 11px; color: #718096; }
+  .conn-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 20px;
+  }
+  .conn-status.connected { background: #c6f6d5; color: #276749; }
+  .conn-status.pending { background: #fefcbf; color: #744210; }
+  .conn-status.missing { background: #fed7d7; color: #742a2a; }
+
+  /* Shift card */
+  .shift-row {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-bottom: 1px solid #f0f4f8;
+    gap: 10px;
+  }
+  .shift-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .shift-name { flex: 1; font-size: 13px; color: #1a202c; font-weight: 500; }
+  .shift-time { font-size: 11px; color: #718096; }
+  .shift-hours { font-size: 12px; font-weight: 600; color: #3b82f6; }
+
+  /* Donut placeholder */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 16px;
+  }
+  .donut {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(#3b82f6 0% 35%, #38a169 35% 58%, #f59e0b 58% 72%, #e53e3e 72% 85%, #a78bfa 85% 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .donut::after {
+    content: '';
+    width: 60px; height: 60px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+  }
+  .legend { display: flex; flex-direction: column; gap: 5px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #4a5568; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Login screen */
+  .login-hero {
+    background: linear-gradient(160deg, var(--green-dark) 0%, var(--green) 60%, var(--green-mid) 100%);
+    padding: 36px 20px 28px;
+    text-align: center;
+    color: #fff;
+  }
+  .login-logo { margin-bottom: 10px; }
+  .login-logo img { width: 110px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+  .login-title { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .login-sub { font-size: 12px; opacity: 0.8; color: #c8e6d0; }
+
+  /* Business type cards */
+  .biz-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+  }
+  .biz-type-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+  }
+  .biz-type-card.selected { border-color: #3b82f6; background: #ebf8ff; }
+  .biz-type-icon { font-size: 28px; margin-bottom: 6px; }
+  .biz-type-name { font-size: 12px; font-weight: 600; color: #2d3748; }
+
+  /* Summary pill */
+  .summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #c6f6d5;
+    color: #276749;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .summary-pill.down { background: #fed7d7; color: #742a2a; }
+
+  .spacer { height: 12px; }
+  .spacer-sm { height: 6px; }
+
+  /* Row between */
+  .row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Invoice scan */
+  .scan-area {
+    background: #1a202c;
+    height: 160px;
+    margin: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: #fff;
+    font-size: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: #3b82f6;
+    border-style: solid;
+  }
+  .scan-corner.tl { top: 10px; right: 10px; border-width: 2px 0 0 2px; border-right: none; border-bottom: none; }
+  .scan-corner.tr { top: 10px; left: 10px; border-width: 2px 2px 0 0; border-left: none; border-bottom: none; }
+  .scan-corner.bl { bottom: 10px; right: 10px; border-width: 0 0 2px 2px; border-right: none; border-top: none; }
+  .scan-corner.br { bottom: 10px; left: 10px; border-width: 0 2px 2px 0; border-left: none; border-top: none; }
+
+  /* Tabs inside screen */
+  .inner-tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  .inner-tab {
+    flex: 1;
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 11px;
+    color: #718096;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .inner-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; font-weight: 600; }
+
+  /* Nav screen selector at top */
+  .nav-breadcrumb {
+    background: #0f172a;
+    padding: 10px 16px;
+    color: #64748b;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .nav-breadcrumb span { color: #94a3b8; }
+
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <img src="../assets/logo.png" class="sidebar-logo" alt="House of Business Logo">
+  <h2>Wireframes v1.0</h2>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">כניסה</div>
+    <button class="sidebar-btn active" onclick="show('login')">🔐 כניסה / הרשמה</button>
+    <button class="sidebar-btn" onclick="show('register')">📝 הרשמה - סוג עסק</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">הגדרה ראשונית</div>
+    <button class="sidebar-btn" onclick="show('connections')">🔗 חיבורים (אשף)</button>
+    <button class="sidebar-btn" onclick="show('business-audit')">📊 Business Audit</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">מסכים ראשיים</div>
+    <button class="sidebar-btn" onclick="show('dashboard')">🏠 דשבורד</button>
+    <button class="sidebar-btn" onclick="show('suppliers')">🏪 ספקים</button>
+    <button class="sidebar-btn" onclick="show('inventory')">📦 מלאי</button>
+    <button class="sidebar-btn" onclick="show('daily-order')">📋 הזמנה יומית</button>
+    <button class="sidebar-btn" onclick="show('price-compare')">💰 השוואת מחירים</button>
+    <button class="sidebar-btn" onclick="show('recipes')">🍽️ מתכונים ועלויות</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">כספים</div>
+    <button class="sidebar-btn" onclick="show('profit-daily')">📊 רווח יומי</button>
+    <button class="sidebar-btn" onclick="show('profit-dish')">🥩 רווח לפי מנה</button>
+    <button class="sidebar-btn" onclick="show('money-flow')">🌊 לאן הלך הכסף</button>
+    <button class="sidebar-btn" onclick="show('cashflow')">📈 תחזית תזרים</button>
+    <button class="sidebar-btn" onclick="show('invoices')">📄 חשבוניות וייצוא</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">עובדים</div>
+    <button class="sidebar-btn" onclick="show('employees')">👥 עובדים (בעל עסק)</button>
+    <button class="sidebar-btn" onclick="show('employee-view')">👤 מסך עובד</button>
+    <button class="sidebar-btn" onclick="show('shifts')">🕐 משמרות</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">נוסף</div>
+    <button class="sidebar-btn" onclick="show('ai-chat')">🤖 יועץ AI</button>
+    <button class="sidebar-btn" onclick="show('settings')">⚙️ הגדרות</button>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">תיעוד ותמיכה</div>
+    <button class="sidebar-btn" onclick="show('features-guide')">📖 מדריך פיצ'רים</button>
+    <button class="sidebar-btn" onclick="show('support')">🆘 תמיכה ועזרה</button>
+  </div>
+</nav>
+
+<!-- Main area -->
+<div class="main" id="main-area">
+
+  <!-- ==================== LOGIN ==================== -->
+  <div class="phone-wrap">
+    <div class="phone active" id="screen-login">
+      <div class="status-bar"><span>09:41</span><span>📶 🔋</span></div>
+      <div class="screen-content" style="display:flex;flex-direction:column;">
+        <div class="login-hero">
+          <div class="login-logo"><img src="../assets/logo.png" alt="House of Business"></div>
+          <div class="login-title">HOUSE OF BUSINESS</div>
+          <div class="login-sub">ניהול עסק חכם בכף היד</div>
+        </div>
+        <div style="padding:16px 10px 10px;">
+          <!-- בחירת סוג כניסה -->
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div style="flex:1;padding:14px 8px;background:var(--green);border-radius:12px;text-align:center;cursor:pointer;border:2px solid var(--gold);">
+              <div style="font-size:22px;">👔</div>
+              <div style="font-size:12px;font-weight:700;color:#fff;margin-top:4px;">כניסת מנהל</div>
+              <div style="font-size:10px;color:#a7d4b8;margin-top:2px;">בעל עסק</div>
+            </div>
+            <div style="flex:1;padding:14px 8px;background:#f7fafc;border-radius:12px;text-align:center;cursor:pointer;border:2px solid #e2e8f0;">
+              <div style="font-size:22px;">👤</div>
+              <div style="font-size:12px;font-weight:700;color:#2d3748;margin-top:4px;">כניסת עובד</div>
+              <div style="font-size:10px;color:#718096;margin-top:2px;">שם משתמש + סיסמה</div>
+            </div>
+          </div>
+          <!-- טופס כניסת מנהל (מוצג כברירת מחדל) -->
+          <div class="input-group">
+            <div class="input-label">מייל</div>
+            <div class="input-field filled">coffee@gmail.com</div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">סיסמה</div>
+            <div class="input-field filled">••••••••</div>
+          </div>
+          <div class="spacer"></div>
+          <button class="btn">כניסה למערכת</button>
+          <button class="btn outline">הרשמה - עסק חדש</button>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">כניסה / הרשמה</div>
+  </div>
+
+  <!-- ==================== REGISTER ==================== -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-register">
+      <div class="status-bar"><span>09:41</span><span>📶 🔋</span></div>
+      <div class="top-bar">
+        <div>
+          <div style="font-size:11px;color:#718096;">שלב 2 מתוך 2</div>
+          <h1>סוג העסק שלך</h1>
+        </div>
+      </div>
+      <div class="screen-content">
+        <div style="padding:14px 10px 6px;font-size:12px;color:#718096;">
+          הבחירה תקבע איך המערכת תחשב לך עלויות ורווחים
+        </div>
+        <div class="biz-type-grid">
+          <div class="biz-type-card selected">
+            <div class="biz-type-icon">🍽️</div>
+            <div class="biz-type-name">מסעדה</div>
+          </div>
+          <div class="biz-type-card">
+            <div class="biz-type-icon">☕</div>
+            <div class="biz-type-name">בית קפה</div>
+          </div>
+          <div class="biz-type-card">
+            <div class="biz-type-icon">🥐</div>
+            <div class="biz-type-name">מאפייה</div>
+          </div>
+          <div class="biz-type-card">
+            <div class="biz-type-icon">🍺</div>
+            <div class="biz-type-name">בר</div>
+          </div>
+          <div class="biz-type-card">
+            <div class="biz-type-icon">✂️</div>
+            <div class="biz-type-name">ספר / מספרה</div>
+          </div>
+          <div class="biz-type-card">
+            <div class="biz-type-icon">💼</div>
+            <div class="biz-type-name">שירות אחר</div>
+          </div>
+        </div>
+        <div class="alert info" style="margin:8px 10px;">
+          <span>ℹ️</span>
+          <span>מסעדה נבחרה - עלויות יחושבו לפי מרכיבי מנה</span>
+        </div>
+        <button class="btn green">סיום הרשמה ←</button>
+      </div>
+    </div>
+    <div class="screen-label">הרשמה - סוג עסק</div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+function show(screenId) {
+  // Update sidebar buttons
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Show all relevant phones
+  document.querySelectorAll('.phone').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('screen-' + screenId);
+  if (target) target.classList.add('active');
+
+  // Scroll main to top
+  window.scrollTo(0,0);
+}
+
+// Build remaining screens dynamically
+const screens = {
+  'connections': buildConnections,
+  'business-audit': buildBusinessAudit,
+  'dashboard': buildDashboard,
+  'suppliers': buildSuppliers,
+  'inventory': buildInventory,
+  'daily-order': buildDailyOrder,
+  'price-compare': buildPriceCompare,
+  'recipes': buildRecipes,
+  'profit-daily': buildProfitDaily,
+  'profit-dish': buildProfitDish,
+  'money-flow': buildMoneyFlow,
+  'cashflow': buildCashflow,
+  'invoices': buildInvoices,
+  'employees': buildEmployees,
+  'employee-view': buildEmployeeView,
+  'shifts': buildShifts,
+  'ai-chat': buildAiChat,
+  'settings': buildSettings,
+  'features-guide': buildFeaturesGuide,
+  'support': buildSupport,
+};
+
+Object.keys(screens).forEach(id => {
+  const wrap = document.createElement('div');
+  wrap.className = 'phone-wrap';
+  const phone = document.createElement('div');
+  phone.className = 'phone';
+  phone.id = 'screen-' + id;
+  phone.innerHTML = screens[id]();
+  const label = document.createElement('div');
+  label.className = 'screen-label';
+  label.textContent = id;
+  wrap.appendChild(phone);
+  wrap.appendChild(label);
+  document.getElementById('main-area').appendChild(wrap);
+});
+
+function sb() { return `<div class="status-bar"><span>09:41</span><span>📶 🔋</span></div>`; }
+function tabBar(active) {
+  const tabs = [
+    {id:'home',icon:'🏠',label:'ראשי'},
+    {id:'suppliers',icon:'📦',label:'ספקים'},
+    {id:'recipes',icon:'🍽️',label:'מתכונים'},
+    {id:'money',icon:'📊',label:'כספים'},
+    {id:'ai',icon:'🤖',label:'AI'},
+    {id:'employees',icon:'👥',label:'עובדים'},
+  ];
+  return `<div class="tab-bar" style="padding:6px 0 2px;">${tabs.map(t=>`<div class="tab-item ${t.id===active?'active':''}" style="font-size:8px;">`+
+    `<span class="tab-icon" style="font-size:16px;">${t.icon}</span>${t.label}</div>`).join('')}</div>`;
+}
+
+function buildConnections() { return sb() + `
+  <div class="top-bar"><div><h1>חיבורים</h1><div class="top-bar-sub">הגדרה ראשונית חובה</div></div></div>
+  <div class="screen-content">
+    <div style="padding:10px 10px 4px;">
+      <div class="alert warning">
+        <span>⚠️</span>
+        <span style="font-size:11px;">יש להשלים 3 חיבורים חובה לפני שניתן להשתמש באפליקציה</span>
+      </div>
+    </div>
+    <div class="section-header">חובה</div>
+    <div class="conn-item">
+      <div class="conn-icon" style="background:#ebf8ff;">📧</div>
+      <div class="conn-info"><div class="conn-title">מייל העסק</div><div class="conn-sub">לקבלת תשובות מספקים</div></div>
+      <div class="conn-status connected">מחובר ✓</div>
+    </div>
+    <div class="conn-item">
+      <div class="conn-icon" style="background:#fff5f5;">💸</div>
+      <div class="conn-info"><div class="conn-title">הוצאות קבועות</div><div class="conn-sub">שכירות, חשמל, ביטוח...</div></div>
+      <div class="conn-status connected">הוזן ✓</div>
+    </div>
+    <div class="conn-item">
+      <div class="conn-icon" style="background:#f0fff4;">🍽️</div>
+      <div class="conn-info"><div class="conn-title">עלויות חומרי גלם</div><div class="conn-sub">לפחות מנה אחת נדרשת</div></div>
+      <div class="conn-status missing">חסר !</div>
+    </div>
+    <div class="section-header">רשות (מומלץ)</div>
+    <div class="conn-item">
+      <div class="conn-icon" style="background:#faf5ff;">🖥️</div>
+      <div class="conn-info"><div class="conn-title">קופה (POS)</div><div class="conn-sub">ביקום / קופה אחרת</div></div>
+      <div class="conn-status pending">לא מחובר</div>
+    </div>
+    <div class="conn-item">
+      <div class="conn-icon" style="background:#fffff0;">⏱️</div>
+      <div class="conn-info"><div class="conn-title">מכונת נוכחות</div><div class="conn-sub">שאיבת שעות עובדים</div></div>
+      <div class="conn-status pending">לא מחובר</div>
+    </div>
+    <button class="btn" style="opacity:0.4;cursor:not-allowed;">המשך לאפליקציה ← (חסר חיבור)</button>
+  </div>
+`; }
+
+function buildDashboard() { return sb() + `
+  <div class="top-bar">
+    <div><h1>שלום, גיא 👋</h1><div class="top-bar-sub">יום חמישי, 14 מרץ 2025</div></div>
+    <div style="display:flex;gap:6px;">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">🔔</button>
+    </div>
+  </div>
+  <div class="screen-content">
+
+    <!-- התראת מלאי חירום -->
+    <div class="alert danger"><span>🔴</span><span>חוסר קריטי: אסאדו נגמר (0 ק"ג) · הזמן עכשיו</span></div>
+
+    <!-- כרטיס דליפות רווח -->
+    <div style="background:linear-gradient(135deg,#742a2a,#9b2c2c);border-radius:14px;margin:8px 10px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="color:#fff;font-size:13px;font-weight:700;">🔴 הפסד פוטנציאלי היום</div>
+        <div style="color:#fed7d7;font-size:10px;cursor:pointer;">פירוט מלא ←</div>
+      </div>
+      <div style="font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;">₪ 1,280</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#fff;">המבורגר קלאסי</div>
+            <div style="font-size:10px;color:#feb2b2;">רווח נמוך ב־₪8 לעומת שבוע שעבר</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#feb2b2;">- ₪ 380</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#fff;">שעות 15:00–17:00</div>
+            <div style="font-size:10px;color:#feb2b2;">ירידה של 42% במכירות</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#feb2b2;">- ₪ 380</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#fff;">מלאי שנזרק השבוע <span style="font-size:9px;opacity:0.7;">(דיווח ידני)</span></div>
+            <div style="font-size:10px;color:#feb2b2;">בשר ועגבניות</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#feb2b2;">- ₪ 520</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- הכנסות יומיות -->
+    <div class="card">
+      <div class="card-title">הכנסות היום</div>
+      <div class="card-value green">₪ 8,200</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+        <div class="summary-pill">↑ 12% מאתמול</div>
+        <div style="font-size:11px;color:#718096;">רווח נקי: <strong style="color:#276749;">₪ 2,840</strong></div>
+      </div>
+    </div>
+
+    <!-- סטטיסטיקות יומיות -->
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="val">147</div>
+        <div class="lbl">הזמנות היום</div>
+      </div>
+      <div class="stat-box">
+        <div class="val" style="color:#276749;">8</div>
+        <div class="lbl">שולחנות פתוחים <span style="font-size:8px;color:#a0aec0;">(מסעדה)</span></div>
+      </div>
+      <div class="stat-box">
+        <div class="val" style="color:#3b82f6;">23</div>
+        <div class="lbl">משלוחים</div>
+      </div>
+    </div>
+
+    <!-- 5 הזמנות אחרונות -->
+    <div class="section-header">5 הזמנות אחרונות</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e8f5ee;font-size:16px;">🍽️</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שולחן 4 · 2 סועדים</div>
+          <div class="list-item-sub">אנטריקוט × 1, שניצל × 1 | 13:42</div>
+        </div>
+        <div style="font-weight:700;font-size:13px;color:#276749;">₪ 144</div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#ebf8ff;font-size:16px;">🛵</div>
+        <div class="list-item-content">
+          <div class="list-item-title">משלוח · וולט</div>
+          <div class="list-item-sub">פיצה × 2, קולה × 2 | 13:38</div>
+        </div>
+        <div style="font-weight:700;font-size:13px;color:#276749;">₪ 98</div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e8f5ee;font-size:16px;">🍽️</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שולחן 7 · 4 סועדים</div>
+          <div class="list-item-sub">המבורגר × 3, סלט × 1 | 13:25</div>
+        </div>
+        <div style="font-weight:700;font-size:13px;color:#276749;">₪ 213</div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#ebf8ff;font-size:16px;">🛵</div>
+        <div class="list-item-content">
+          <div class="list-item-title">משלוח · טעם טוב</div>
+          <div class="list-item-sub">שניצל × 1, צ'יפס × 1 | 13:10</div>
+        </div>
+        <div style="font-weight:700;font-size:13px;color:#276749;">₪ 76</div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e8f5ee;font-size:16px;">🍽️</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שולחן 2 · 3 סועדים</div>
+          <div class="list-item-sub">עוף × 2, קינוח × 1 | 12:58</div>
+        </div>
+        <div style="font-weight:700;font-size:13px;color:#276749;">₪ 167</div>
+      </div>
+    </div>
+
+    <!-- גרף השוואה לימים קודמים -->
+    <div class="section-header">השוואה לימים קודמים</div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:11px;color:#718096;">הכנסות - 7 ימים אחרונים</div>
+        <div style="font-size:11px;font-weight:600;color:var(--green);">↑ 12% ממוצע</div>
+      </div>
+      <div class="chart-placeholder" style="height:100px;">
+        <div class="chart-bars" style="height:80px;align-items:flex-end;width:100%;padding:0 6px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:60%;"></div>
+            <div style="font-size:8px;color:#718096;">ו</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:85%;"></div>
+            <div style="font-size:8px;color:#718096;">ש</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:45%;"></div>
+            <div style="font-size:8px;color:#718096;">א</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:70%;"></div>
+            <div style="font-size:8px;color:#718096;">ב</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:55%;"></div>
+            <div style="font-size:8px;color:#718096;">ג</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar" style="width:100%;height:80%;"></div>
+            <div style="font-size:8px;color:#718096;">ד</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div class="bar today" style="width:100%;height:75%;"></div>
+            <div style="font-size:8px;color:var(--green);font-weight:700;">ה ●</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#718096;margin-top:6px;padding:0 4px;">
+        <span>אתמול: <strong style="color:#2d3748;">₪7,300</strong></span>
+        <span>ממוצע שבועי: <strong style="color:#2d3748;">₪7,640</strong></span>
+        <span>היום: <strong style="color:var(--green);">₪8,200</strong></span>
+      </div>
+    </div>
+
+    <!-- מוצרים הכי נמכרים -->
+    <div class="section-header">🏆 הכי נמכרים היום</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div style="width:24px;height:24px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">1</div>
+        <div class="list-item-content" style="margin-right:10px;">
+          <div class="list-item-title">שניצל וינאי</div>
+          <div class="list-item-sub">נמכרו 43 יחידות</div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#276749;">₪ 2,365</div>
+      </div>
+      <div class="list-item">
+        <div style="width:24px;height:24px;background:#a0aec0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">2</div>
+        <div class="list-item-content" style="margin-right:10px;">
+          <div class="list-item-title">המבורגר 200 גרם</div>
+          <div class="list-item-sub">נמכרו 31 יחידות</div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#276749;">₪ 1,705</div>
+      </div>
+      <div class="list-item">
+        <div style="width:24px;height:24px;background:#cd7f32;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">3</div>
+        <div class="list-item-content" style="margin-right:10px;">
+          <div class="list-item-title">אנטריקוט 300 גרם</div>
+          <div class="list-item-sub">נמכרו 28 יחידות</div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#276749;">₪ 2,492</div>
+      </div>
+    </div>
+
+    <!-- מוצרים הכי חלשים -->
+    <div class="section-header">⚠️ הכי חלשים היום</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fed7d7;font-size:16px;">📉</div>
+        <div class="list-item-content">
+          <div class="list-item-title">סלט קיסר</div>
+          <div class="list-item-sub">נמכרו 3 יחידות בלבד</div>
+        </div>
+        <span class="badge red">חלש</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fed7d7;font-size:16px;">📉</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מרק עוף</div>
+          <div class="list-item-sub">נמכרו 4 יחידות בלבד</div>
+        </div>
+        <span class="badge red">חלש</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fefcbf;font-size:16px;">📊</div>
+        <div class="list-item-content">
+          <div class="list-item-title">פסטה ברוטב שמנת</div>
+          <div class="list-item-sub">נמכרו 7 יחידות</div>
+        </div>
+        <span class="badge yellow">בינוני</span>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('home')}
+`; }
+
+function buildSuppliers() { return sb() + `
+  <div class="top-bar"><h1>ספקים</h1><button class="icon-btn">＋</button></div>
+  <div class="inner-tabs">
+    <div class="inner-tab active">כל הספקים</div>
+    <div class="inner-tab">הזמנה יומית</div>
+    <div class="inner-tab">השוואת מחירים</div>
+  </div>
+  <div class="screen-content">
+    <div class="alert danger"><span>🔴</span><span>2 פריטים עומדים להסתיים</span></div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar">🥩</div>
+        <div class="list-item-content">
+          <div class="list-item-title">נדלס - ספק בשר</div>
+          <div class="list-item-sub">הזמנה אחרונה: 8.3 | ₪ 2,400</div>
+        </div>
+        <span class="badge green">פעיל</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">🥬</div>
+        <div class="list-item-content">
+          <div class="list-item-title">יוסי ירקות</div>
+          <div class="list-item-sub">הזמנה אחרונה: 11.3 | ₪ 680</div>
+        </div>
+        <span class="badge green">פעיל</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">🍺</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ישקר - שתייה</div>
+          <div class="list-item-sub">הזמנה אחרונה: 5.3 | ₪ 1,100</div>
+        </div>
+        <span class="badge yellow">ממתין לתשובה</span>
+      </div>
+      <div class="list-item" style="opacity:0.55;">
+        <div class="list-avatar">🌾</div>
+        <div class="list-item-content">
+          <div class="list-item-title" style="text-decoration:line-through;">ספק לחם ומאפה</div>
+          <div class="list-item-sub">הוחלף ב-14.3 · נשמר בארכיון</div>
+        </div>
+        <span class="badge gray">לא פעיל</span>
+      </div>
+    </div>
+    <button class="btn outline">+ הוסף ספק חדש</button>
+  </div>
+  ${tabBar('suppliers')}
+`; }
+
+function buildInventory() { return sb() + `
+  <div class="top-bar"><h1>מלאי</h1><button class="icon-btn">＋</button></div>
+  <div class="inner-tabs">
+    <div class="inner-tab active">כל הפריטים</div>
+    <div class="inner-tab">עומד להסתיים</div>
+    <div class="inner-tab">קטגוריות</div>
+  </div>
+  <div class="screen-content">
+    <div class="alert info"><span>🔄</span><span>המלאי יורד אוטומטית לפי מכירות · מרכיבי המתכון מנוכים עם כל מכירה</span></div>
+    <div class="alert danger"><span>🔴</span><span>2 פריטים הגיעו לסף מינימום - הזמן עכשיו</span></div>
+    <div class="section-header">בשר ועוף</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar">🥩</div>
+        <div class="list-item-content">
+          <div class="list-item-title">אסאדו</div>
+          <div class="list-item-sub">מינימום: 5 ק"ג | ספק: נדלס</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:15px;font-weight:700;color:#e53e3e;">3 ק"ג</div>
+          <span class="badge red">נמוך</span>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">🐔</div>
+        <div class="list-item-content">
+          <div class="list-item-title">חזה עוף</div>
+          <div class="list-item-sub">מינימום: 8 ק"ג | ספק: נדלס</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:15px;font-weight:700;color:#276749;">14 ק"ג</div>
+          <span class="badge green">תקין</span>
+        </div>
+      </div>
+    </div>
+    <div class="section-header">ירקות</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar">🍅</div>
+        <div class="list-item-content">
+          <div class="list-item-title">עגבניות</div>
+          <div class="list-item-sub">מינימום: 10 ק"ג | ספק: יוסי ירקות</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:15px;font-weight:700;color:#f59e0b;">6 ק"ג</div>
+          <span class="badge yellow">עיון</span>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">🧅</div>
+        <div class="list-item-content">
+          <div class="list-item-title">בצל</div>
+          <div class="list-item-sub">מינימום: 5 ק"ג | ספק: יוסי ירקות</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:15px;font-weight:700;color:#276749;">12 ק"ג</div>
+          <span class="badge green">תקין</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin:0 10px;">
+      <button class="btn outline" style="flex:1;margin:0;">+ הוסף פריט</button>
+      <button class="btn outline" style="flex:1;margin:0;border-color:var(--gold);color:var(--gold-dark);">📋 עדכון כמות בפועל</button>
+    </div>
+    <div class="section-header">דיווח על מלאי שנזרק</div>
+    <div class="card">
+      <div style="font-size:11px;color:#718096;margin-bottom:10px;">דיווח ידני — הנתון ישפיע על כרטיס דליפות הרווח בדשבורד</div>
+      <div class="input-group" style="padding:4px 0;">
+        <div class="input-label">פריט</div>
+        <div class="input-field" style="color:#718096;">בחר פריט מהמלאי...</div>
+      </div>
+      <div class="input-group" style="padding:4px 0;">
+        <div class="input-label">כמות שנזרקה</div>
+        <div class="input-field" style="color:#718096;">0 ק"ג / יח'</div>
+      </div>
+      <div class="input-group" style="padding:4px 0;">
+        <div class="input-label">סיבה (אופציונלי)</div>
+        <div class="input-field" style="color:#718096;">פג תוקף / נשפך / אחר...</div>
+      </div>
+      <button class="btn" style="margin:8px 0 0;background:#e53e3e;">🗑️ דווח על בזבוז</button>
+    </div>
+    <div class="section-header">עדכון כמות בפועל</div>
+    <div class="card">
+      <div style="font-size:11px;color:#718096;margin-bottom:10px;">בדיקה פיזית — הזן את הכמות שיש בפועל</div>
+      <div class="input-group" style="padding:4px 0;">
+        <div class="input-label">פריט</div>
+        <div class="input-field">אסאדו</div>
+      </div>
+      <div class="input-group" style="padding:4px 0;">
+        <div class="input-label">כמות בפועל</div>
+        <div class="input-field">3 ק"ג</div>
+      </div>
+      <div style="background:#fef3c7;border-radius:8px;padding:10px;margin:8px 0;">
+        <div style="font-size:12px;font-weight:600;color:#744210;">⚠️ נמצא הפרש: 2 ק"ג</div>
+        <div style="font-size:11px;color:#92400e;margin-top:3px;">המערכת ציפתה ל-5 ק"ג · דיווחת על 3 ק"ג</div>
+        <div style="font-size:11px;color:#92400e;margin-top:6px;font-weight:600;">האם לדווח על 2 ק"ג כבזבוז?</div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <button class="btn" style="flex:1;margin:0;font-size:11px;padding:7px;background:#e53e3e;">כן, דווח כבזבוז</button>
+          <button class="btn outline" style="flex:1;margin:0;font-size:11px;padding:7px;">לא, רק עדכן כמות</button>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('suppliers')}
+`; }
+
+function buildDailyOrder() { return sb() + `
+  <div class="top-bar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" style="font-size:16px;">←</button>
+      <div><h1>הזמנה יומית</h1><div class="top-bar-sub">ספקים ומלאי › הזמנה יומית</div></div>
+    </div>
+    <button class="icon-btn">✅</button>
+  </div>
+  <div class="screen-content">
+    <div class="alert info"><span>🤖</span><span>המערכת מציגה ממוצע לפי יום חמישי</span></div>
+    <div class="section-header">בשר ועוף</div>
+    <div style="background:#fff;">
+      <div class="qty-row">
+        <div><div class="qty-name">אסאדו</div><div class="qty-unit">ק"ג | ממוצע ה': 18</div></div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-val">18</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+      <div class="qty-row">
+        <div><div class="qty-name">חזה עוף</div><div class="qty-unit">ק"ג | ממוצע ה': 12</div></div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-val" style="color:#e53e3e;">15</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+      <div class="qty-row">
+        <div><div class="qty-name">אנטריקוט</div><div class="qty-unit">ק"ג | ממוצע ה': 8</div></div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-val">8</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-header">ירקות</div>
+    <div style="background:#fff;">
+      <div class="qty-row">
+        <div><div class="qty-name">עגבניות</div><div class="qty-unit">ק"ג | ממוצע ה': 20</div></div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-val">20</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+      <div class="qty-row">
+        <div><div class="qty-name">בצל</div><div class="qty-unit">ק"ג | ממוצע ה': 15</div></div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-val">15</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn green">אישור הזמנה ✓</button>
+    <div class="section-header">אחרי אישור - נשלח אוטומטית</div>
+    <div style="background:#fff;">
+      <div class="wizard-step">
+        <div class="step-circle done">✓</div>
+        <div class="step-content">
+          <div class="step-title">נדלס - ספק בשר</div>
+          <div class="step-sub">📧 מייל נשלח | אסאדו 18 ק"ג, עוף 15 ק"ג</div>
+        </div>
+        <span class="badge green">נשלח</span>
+      </div>
+      <div class="wizard-step">
+        <div class="step-circle active">⏳</div>
+        <div class="step-content">
+          <div class="step-title">יוסי ירקות</div>
+          <div class="step-sub">💬 WhatsApp נשלח | עגבניות 20 ק"ג, בצל 15 ק"ג</div>
+        </div>
+        <span class="badge yellow">שולח...</span>
+      </div>
+      <div class="wizard-step">
+        <div class="step-circle pending">○</div>
+        <div class="step-content">
+          <div class="step-title">ספק לחם ומאפה</div>
+          <div class="step-sub">📞 אין מייל - התקשר ידנית: 050-1234567</div>
+        </div>
+        <span class="badge gray">ידני</span>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('suppliers')}
+`; }
+
+function buildPriceCompare() { return sb() + `
+  <div class="top-bar"><div><h1>השוואת מחירים</h1><div class="top-bar-sub">AI מחפש ספקים זולים יותר</div></div></div>
+  <div class="screen-content">
+
+    <!-- כפתור בקשה חדשה -->
+    <div class="card" style="margin:10px 10px 6px;padding:12px;">
+      <div style="font-size:12px;font-weight:600;color:#2d3748;margin-bottom:8px;">🔍 מצא לי ספק זול יותר</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button class="btn outline" style="flex:1;margin:0;font-size:11px;padding:8px;">פריט ספציפי</button>
+        <button class="btn" style="flex:1;margin:0;font-size:11px;padding:8px;">ספק שלם</button>
+      </div>
+      <div class="input-field" style="color:#718096;font-size:12px;margin-bottom:8px;">בחר פריט / ספק...</div>
+      <div style="font-size:10px;color:#718096;">AI יחפש באינטרנט וישלח מייל רשמי ממייל העסק</div>
+    </div>
+
+    <!-- סטטוס חיפושים פעילים -->
+    <div class="section-header">בטיפול</div>
+    <div style="background:#fff;">
+
+      <!-- ספק שנמצא, מייל נשלח, ממתין לתשובה -->
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fef3c7;font-size:18px;">🥩</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ספק בשר חדש - "טרי מהשוק"</div>
+          <div class="list-item-sub">נמצא ברשת · מייל נשלח 13.3 · ממתין לתשובה</div>
+          <div style="font-size:10px;color:#e53e3e;margin-top:2px;">⏰ 18 שעות להחלטה - אם לא יענה, נשלח שוב</div>
+        </div>
+        <span class="badge yellow">ממתין</span>
+      </div>
+
+      <!-- ספק שלא ענה - נשלח תזכורת אוטומטית -->
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fed7d7;font-size:18px;">🥬</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ירקות הגליל בע"מ</div>
+          <div class="list-item-sub">לא ענה תוך 24 שעות · תזכורת נשלחה אוטומטית 14.3</div>
+          <div style="font-size:10px;color:#718096;margin-top:2px;">שישי-שבת לא נספרים</div>
+        </div>
+        <span class="badge red">תזכורת נשלחה</span>
+      </div>
+
+      <!-- ספק שענה - נמצאה הזדמנות -->
+      <div class="list-item">
+        <div class="list-avatar" style="background:#c6f6d5;font-size:18px;">🍺</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ישקר פלוס - שתייה</div>
+          <div class="list-item-sub">ענה תוך 6 שעות · חיסכון פוטנציאלי ↓ 8%</div>
+        </div>
+        <span class="badge green">ענה ✓</span>
+      </div>
+    </div>
+
+    <!-- פירוט הצעה שהתקבלה -->
+    <div class="section-header">ניתוח הצעת ישקר פלוס</div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;color:#4a5568;">השוואה מול הספק הנוכחי</div>
+        <span class="badge green">חיסכון ₪ 180/חודש</span>
+      </div>
+      <div class="divider"></div>
+      <div class="progress-row">
+        <div class="progress-label" style="font-size:11px;">קולה 1.5</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:72%;background:#276749;"></div></div>
+        <div class="progress-val" style="color:#276749;">↓ 3.20 ₪</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label" style="font-size:11px;">מים 0.5</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:90%;background:#718096;"></div></div>
+        <div class="progress-val">= 1.10 ₪</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label" style="font-size:11px;">בירה 0.33</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:55%;background:#276749;"></div></div>
+        <div class="progress-val" style="color:#276749;">↓ 4.80 ₪</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn green" style="flex:1;margin:0;padding:10px;font-size:12px;">✓ אשר מעבר לספק</button>
+        <button class="btn" style="flex:1;margin:0;padding:10px;font-size:12px;background:#e2e8f0;color:#4a5568;">דחה</button>
+      </div>
+    </div>
+
+    <!-- empty state - לא נמצא ספק -->
+    <div class="section-header">דוגמה — כשלא נמצא ספק זול יותר</div>
+    <div class="card" style="text-align:center;padding:18px;">
+      <div style="font-size:32px;margin-bottom:8px;">🔍</div>
+      <div style="font-weight:700;font-size:14px;color:#2d3748;margin-bottom:6px;">לא נמצא ספק זול יותר</div>
+      <div style="font-size:11px;color:#718096;margin-bottom:14px;">חיפשנו ברשת ולא מצאנו ספק עם מחיר נמוך יותר עבור שמן זית</div>
+      <div style="background:var(--green-light);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;color:#2d3748;text-align:right;">
+        💬 האם תרצה שאחפש שוב בעוד שבוע?
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn green" style="flex:1;margin:0;font-size:12px;">כן, חפש שוב</button>
+        <button class="btn" style="flex:1;margin:0;font-size:12px;background:#e2e8f0;color:#4a5568;">לא תודה</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('suppliers')}
+`; }
+
+function buildProfitDaily() { return sb() + `
+  <div class="top-bar"><h1>כספים</h1><div class="icon-btn">📅</div></div>
+  <div class="inner-tabs" style="overflow-x:auto;white-space:nowrap;display:flex;">
+    <div class="inner-tab active" style="flex-shrink:0;">📊 רווח יומי</div>
+    <div class="inner-tab" style="flex-shrink:0;">🌊 לאן הכסף</div>
+    <div class="inner-tab" style="flex-shrink:0;">📄 חשבוניות</div>
+    <div class="inner-tab" style="flex-shrink:0;">📈 תחזית</div>
+    <div class="inner-tab" style="flex-shrink:0;">📤 ייצוא</div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;padding:6px 12px 0;">
+    <div style="display:flex;background:#e2e8f0;border-radius:20px;padding:2px;font-size:10px;">
+      <span style="padding:3px 10px;background:var(--green);color:#fff;border-radius:20px;cursor:pointer;">ללא מע"מ</span>
+      <span style="padding:3px 10px;color:#718096;cursor:pointer;">כולל מע"מ</span>
+    </div>
+  </div>
+  <div class="screen-content">
+    <div class="card">
+      <div class="card-title">רווח נקי אמיתי - היום</div>
+      <div class="card-value green">₪ 2,840</div>
+      <div class="summary-pill">↑ 12% לעומת אתמול</div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div class="progress-row">
+        <div class="progress-label">מחזור</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%;background:#3b82f6;"></div></div>
+        <div class="progress-val">₪ 8,200</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">חומרי גלם</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:28%;background:#f59e0b;"></div></div>
+        <div class="progress-val">- ₪ 2,300</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">שכר עובדים</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:18%;background:#e53e3e;"></div></div>
+        <div class="progress-val">- ₪ 1,480</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">הוצ' קבועות</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:19%;background:#a78bfa;"></div></div>
+        <div class="progress-val">- ₪ 1,580</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">השוואה שבועית</div>
+      <div class="chart-placeholder">
+        <div class="chart-bars">
+          <div class="bar" style="height:50%;background:#bee3f8"></div>
+          <div class="bar" style="height:65%;background:#bee3f8"></div>
+          <div class="bar" style="height:40%;background:#bee3f8"></div>
+          <div class="bar" style="height:75%;background:#bee3f8"></div>
+          <div class="bar today" style="height:60%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert info"><span>🖥️</span><span>דוח Z נשאב אוטומטית מהקופה בסגירה</span></div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('money')}
+`; }
+
+function buildProfitDish() { return sb() + `
+  <div class="top-bar"><h1>רווח לפי מנה</h1><button class="icon-btn">＋</button></div>
+  <div class="screen-content">
+    <div class="inner-tabs" style="border-top:none;">
+      <div class="inner-tab active">כל המנות</div>
+      <div class="inner-tab">הכי רווחיות</div>
+      <div class="inner-tab">בעייתיות</div>
+    </div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🥩</div>
+        <div class="list-item-content">
+          <div class="list-item-title">אנטריקוט 300 גרם</div>
+          <div class="list-item-sub">עלות: ₪ 48 | מחיר מכירה: ₪ 89</div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:14px;font-weight:700;color:#38a169;">46%</div>
+          <div style="font-size:10px;color:#718096;">רווח</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🐔</div>
+        <div class="list-item-content">
+          <div class="list-item-title">חזה עוף צלוי</div>
+          <div class="list-item-sub">עלות: ₪ 22 | מחיר מכירה: ₪ 52</div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:14px;font-weight:700;color:#38a169;">58%</div>
+          <div style="font-size:10px;color:#718096;">רווח</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🍔</div>
+        <div class="list-item-content">
+          <div class="list-item-title">המבורגר 200 גרם</div>
+          <div class="list-item-sub">עלות: ₪ 31 | מחיר מכירה: ₪ 55</div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:14px;font-weight:700;color:#f59e0b;">44%</div>
+          <div style="font-size:10px;color:#718096;">רווח</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🥗</div>
+        <div class="list-item-content">
+          <div class="list-item-title">סלט קיסר</div>
+          <div class="list-item-sub">עלות: ₪ 18 | מחיר מכירה: ₪ 38</div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:14px;font-weight:700;color:#e53e3e;">53%</div>
+          <div style="font-size:10px;color:#718096;">רווח</div>
+        </div>
+      </div>
+    </div>
+    <div class="alert warning"><span>⚠️</span><span>מחיר בשר עלה 8% · עלות 3 מנות עודכנה אוטומטית</span></div>
+    <div class="alert info"><span>🔄</span><span>עלויות מתעדכנות אוטומטית עם כל חשבונית חדשה מהספק</span></div>
+    <button class="btn outline">+ הוסף מנה חדשה</button>
+  </div>
+  ${tabBar('money')}
+`; }
+
+function buildMoneyFlow() { return sb() + `
+  <div class="top-bar"><h1>לאן הלך הכסף</h1><div class="top-bar-sub">מרץ 2025</div></div>
+  <div class="screen-content">
+    <div class="card">
+      <div class="card-title">מחזור חודשי</div>
+      <div class="card-value">₪ 186,400</div>
+      <div class="summary-pill">↑ 7% מחודש שעבר</div>
+    </div>
+    <div class="card">
+      <div class="card-title">חלוקת הוצאות</div>
+      <div class="donut-wrap">
+        <div class="donut"></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>בשר ועוף 35%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#38a169;"></div>שכר 23%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>שכירות 14%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e53e3e;"></div>שתייה 13%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#a78bfa;"></div>אחר 15%</div>
+        </div>
+      </div>
+    </div>
+    <div class="alert danger"><span>📈</span><span>עלות הבשר עלתה ב-22% לעומת חודש שעבר</span></div>
+    <div class="card">
+      <div class="card-title" style="color:#3b82f6;">💡 המלצת AI לחיסכון</div>
+      <div style="font-size:12px;color:#4a5568;line-height:1.6;">
+        אם תוריד עובד אחד במשמרת ראשון תחסוך כ-₪ 2,500 בחודש. רוצה לראות את ההשפעה?
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('money')}
+`; }
+
+function buildInvoices() { return sb() + `
+  <div class="top-bar"><h1>חשבוניות ספקים</h1><button class="icon-btn">📷</button></div>
+  <div class="inner-tabs">
+    <div class="inner-tab active">כל החשבוניות</div>
+    <div class="inner-tab">לפי ספק</div>
+    <div class="inner-tab">חיפוש AI</div>
+  </div>
+  <div class="screen-content">
+    <div class="scan-area">
+      <div class="scan-corner tl"></div>
+      <div class="scan-corner tr"></div>
+      <div class="scan-corner bl"></div>
+      <div class="scan-corner br"></div>
+      <span style="font-size:32px;">📷</span>
+      <span>צלם חשבונית ספק</span>
+      <span style="font-size:10px;opacity:0.6;">AI מזהה את הספק ומשייך אוטומטית</span>
+    </div>
+    <div class="alert info" style="margin:6px 10px;"><span>🤖</span><span style="font-size:11px;">זוהה: נדלס בשר | ₪ 2,400 | שויך לספק אוטומטית ✓</span></div>
+    <div class="section-header">חשבוניות אחרונות</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e6f4ea;font-size:20px;">🧾</div>
+        <div class="list-item-content">
+          <div class="list-item-title">נדלס - בשר ועוף</div>
+          <div class="list-item-sub">11.3.2025 | ₪ 2,400 · שויך אוטומטית</div>
+        </div>
+        <span class="badge green">מאומת ✓</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e6f4ea;font-size:20px;">🧾</div>
+        <div class="list-item-content">
+          <div class="list-item-title">יוסי ירקות</div>
+          <div class="list-item-sub">10.3.2025 | ₪ 680 · שויך אוטומטית</div>
+        </div>
+        <span class="badge green">מאומת ✓</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fef9c3;font-size:20px;">🧾</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ספק לא מזוהה</div>
+          <div class="list-item-sub">8.3.2025 | ₪ 540 · נדרש אישור ידני</div>
+        </div>
+        <span class="badge yellow">בבדיקה</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#e6f4ea;font-size:20px;">🧾</div>
+        <div class="list-item-content">
+          <div class="list-item-title">ישקר שתייה</div>
+          <div class="list-item-sub">4.3.2025 | ₪ 1,100 · שויך אוטומטית</div>
+        </div>
+        <span class="badge green">מאומת ✓</span>
+      </div>
+    </div>
+    <div class="section-header">ייצוא לרואה חשבון</div>
+    <div class="card">
+      <div class="card-title">בחר תקופה לייצוא</div>
+      <div style="display:flex;gap:8px;margin:8px 0;">
+        <div style="flex:1;padding:8px;background:var(--green);color:#fff;border-radius:8px;text-align:center;font-size:11px;font-weight:600;cursor:pointer;">חודש נוכחי</div>
+        <div style="flex:1;padding:8px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;text-align:center;font-size:11px;cursor:pointer;">רבעון</div>
+        <div style="flex:1;padding:8px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;text-align:center;font-size:11px;cursor:pointer;">שנה</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:8px;padding:10px;margin-top:6px;font-size:11px;color:#2d3748;">
+        📊 כולל: חשבוניות ספקים, הוצאות קבועות, שכר עובדים, מחזור מכירות
+      </div>
+      <button class="btn" style="margin:10px 0 0;">📥 הורד Excel</button>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('money')}
+`; }
+
+function buildEmployees() { return sb() + `
+  <div class="top-bar"><h1>עובדים</h1><button class="icon-btn">＋</button></div>
+  <div class="inner-tabs">
+    <div class="inner-tab active">רשימה</div>
+    <div class="inner-tab">משמרות</div>
+    <div class="inner-tab">תכנון</div>
+  </div>
+  <div class="screen-content">
+    <div class="alert warning"><span>⚠️</span><span>דני לוי חרג ב-45 דקות מהמשמרת</span></div>
+    <div style="background:#fff;">
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#c6f6d5;color:#276749;font-weight:700;font-size:15px;">DL</div>
+        <div class="list-item-content">
+          <div class="list-item-title">דני לוי</div>
+          <div class="list-item-sub">35 ₪/שעה · <span style="color:var(--gold-dark);font-weight:600;">🔑 מנהל - גישה מלאה</span></div>
+        </div>
+        <span class="badge green">במשמרת</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#bee3f8;color:#1a365d;font-weight:700;font-size:15px;">SA</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שרה אבו</div>
+          <div class="list-item-sub">32 ₪/שעה · כניסה/יציאה בלבד</div>
+        </div>
+        <span class="badge green">במשמרת</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#fefcbf;color:#744210;font-weight:700;font-size:15px;">MK</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מוחמד כהן</div>
+          <div class="list-item-sub">₪ 7,500/חודש · כניסה/יציאה + מלאי</div>
+        </div>
+        <span class="badge gray">לא במשמרת</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#fed7d7;color:#742a2a;font-weight:700;font-size:15px;">RB</div>
+        <div class="list-item-content">
+          <div class="list-item-title">רינה בן-דוד</div>
+          <div class="list-item-sub">30 ₪/שעה · כניסה/יציאה בלבד</div>
+        </div>
+        <span class="badge gray">לא במשמרת</span>
+      </div>
+    </div>
+    <div class="section-header">הרשאות - דני לוי (מנהל)</div>
+    <div style="background:#fff;">
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">גישה מלאה לכל המערכת</div><div class="toggle-sub">כמו בעל העסק - למעט הגדרות תשלום</div></div>
+        <div class="toggle"></div>
+      </div>
+    </div>
+    <div class="section-header">הרשאות - שרה אבו</div>
+    <div style="background:#fff;">
+      <div style="font-size:10px;color:#718096;padding:6px 12px 2px;">העובד רואה את כל האפליקציה — טאבים ללא הרשאה אפורים ולא לחיצים</div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">כניסה ויציאה ממשמרת</div><div class="toggle-sub">ברירת מחדל לכל עובד</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">עדכון מלאי</div><div class="toggle-sub">הכנסת סחורה ידנית</div></div>
+        <div class="toggle off"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">צפייה בדוחות כספיים</div></div>
+        <div class="toggle off"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">אישור הזמנות לספקים</div></div>
+        <div class="toggle off"></div>
+      </div>
+    </div>
+    <div class="section-header">הוספת עובד חדש</div>
+    <div class="card">
+      <div class="card-title">שלח קישור הרשמה לעובד</div>
+      <div class="input-group" style="padding:6px 0;">
+        <div class="input-label">שם העובד</div>
+        <div class="input-field">דני לוי</div>
+      </div>
+      <div class="input-group" style="padding:6px 0;">
+        <div class="input-label">מייל / טלפון</div>
+        <div class="input-field">050-1234567</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:8px;padding:10px;margin:8px 0;font-size:11px;color:#2d3748;line-height:1.6;">
+        🔗 העובד יקבל קישור ויבחר שם משתמש וסיסמה בעצמו
+      </div>
+      <button class="btn" style="margin:6px 0 0;">📨 שלח קישור הרשמה</button>
+    </div>
+    <div style="background:#fff;margin:0 0 10px;">
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fefcbf;font-size:18px;">⏳</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מיכל כהן</div>
+          <div class="list-item-sub">קישור נשלח · ממתין להרשמה</div>
+        </div>
+        <span class="badge yellow">ממתין</span>
+      </div>
+    </div>
+  </div>
+  ${tabBar('employees')}
+`; }
+
+function buildShifts() { return sb() + `
+  <div class="top-bar"><div><h1>משמרות היום</h1><div class="top-bar-sub">12.3.2025 | סה"כ עלות: ₪ 1,240</div></div></div>
+  <div class="screen-content">
+    <div class="alert danger"><span>🚨</span><span>דני לוי חרג מהמשמרת - 45 דקות נוספות</span></div>
+    <div style="background:#fff;">
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#38a169;"></div>
+        <div class="shift-name">דני לוי</div>
+        <div class="shift-time">08:00 - 16:45 ⚠️</div>
+        <div class="shift-hours">8.75 שע'</div>
+      </div>
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#38a169;"></div>
+        <div class="shift-name">שרה אבו</div>
+        <div class="shift-time">10:00 - 18:00</div>
+        <div class="shift-hours">8 שע'</div>
+      </div>
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#a0aec0;"></div>
+        <div class="shift-name">מוחמד כהן</div>
+        <div class="shift-time">07:00 - 15:00 ✓</div>
+        <div class="shift-hours">8 שע'</div>
+      </div>
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#3b82f6;"></div>
+        <div class="shift-name">רינה בן-דוד</div>
+        <div class="shift-time">14:00 - 22:00</div>
+        <div class="shift-hours">מתוכנן</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">עלות שכר היום</div>
+      <div class="card-value">₪ 1,240</div>
+      <div class="card-sub">תחזית חודשית: ₪ 37,200</div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('employees')}
+`; }
+
+function buildAiChat() { return sb() + `
+  <div class="top-bar">
+    <div><h1>יועץ עסקי AI</h1><div class="top-bar-sub">מנתח את הנתונים של העסק שלך</div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="background:#fff;padding:8px 12px;border-bottom:1px solid #e2e8f0;display:flex;gap:8px;overflow-x:auto;flex-shrink:0;">
+      <div style="background:var(--green-light);color:var(--green);padding:5px 10px;border-radius:20px;font-size:10px;white-space:nowrap;cursor:pointer;">📊 ניתוח רווחיות</div>
+      <div style="background:var(--green-light);color:var(--green);padding:5px 10px;border-radius:20px;font-size:10px;white-space:nowrap;cursor:pointer;">📦 מלאי וספקים</div>
+      <div style="background:var(--green-light);color:var(--green);padding:5px 10px;border-radius:20px;font-size:10px;white-space:nowrap;cursor:pointer;">👥 עובדים ועלויות</div>
+      <div style="background:var(--green-light);color:var(--green);padding:5px 10px;border-radius:20px;font-size:10px;white-space:nowrap;cursor:pointer;">📈 תחזית</div>
+    </div>
+    <div class="chat-area">
+      <div class="chat-bubble bot">
+        שלום גיא 👋 אני מחובר לכל נתוני העסק שלך ויכול לנתח ולייעץ. מה תרצה לבדוק היום?
+      </div>
+      <div class="chat-bubble user">
+        למה עלות הבשר שלי גבוהה כל כך החודש?
+      </div>
+      <div class="chat-bubble bot">
+        📊 ניתחתי את הנתונים:<br><br>
+        • עלות הבשר עלתה <strong>22%</strong> מחודש שעבר<br>
+        • מחיר נדלס עלה ₪ 3/ק"ג מינואר<br>
+        • אתה מזמין 18% יותר ממה שנמכר<br><br>
+        💡 המלצה: בקש הצעת מחיר מ-2 ספקים נוספים ובדוק את כמויות ההזמנה לפי מכירות בפועל.
+      </div>
+      <div class="chat-bubble user">
+        כמה שניצלים להכין מחר (שישי)?
+      </div>
+      <div class="chat-bubble bot">
+        לפי הממוצע של 8 שישים האחרונים - אתה מוכר <strong>67 שניצלים</strong> ביום שישי.<br><br>
+        📈 שישי הבא צפוי חם → המלצה: הכן <strong>75 מנות</strong>.
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <button class="send-btn">➤</button>
+      <input class="chat-input" placeholder="שאל שאלה עסקית - אני מנתח, לא מבצע פעולות" />
+    </div>
+  </div>
+  ${tabBar('ai')}
+`; }
+
+function buildSettings() { return sb() + `
+  <div class="top-bar"><h1>הגדרות</h1></div>
+  <div class="screen-content">
+    <div class="section-header">פרטי העסק</div>
+    <div style="background:#fff;">
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">שם העסק</div><div class="toggle-sub">קפה הרצוגים</div></div>
+        <span style="color:var(--green);font-size:12px;">עריכה</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">סוג עסק</div><div class="toggle-sub">מסעדה</div></div>
+        <span style="color:var(--green);font-size:12px;">עריכה</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">שפה / Language</div><div class="toggle-sub" style="display:flex;gap:6px;margin-top:4px;">
+          <span style="padding:3px 10px;background:var(--green);color:#fff;border-radius:20px;font-size:10px;cursor:pointer;">עברית ✓</span>
+          <span style="padding:3px 10px;background:#f7fafc;border:1px solid #e2e8f0;color:#718096;border-radius:20px;font-size:10px;cursor:pointer;">English</span>
+          <span style="padding:3px 10px;background:#f7fafc;border:1px solid #e2e8f0;color:#718096;border-radius:20px;font-size:10px;cursor:pointer;">عربية</span>
+        </div></div>
+      </div>
+    </div>
+    <div class="section-header">התראות (Push)</div>
+    <div style="background:#fff;">
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">מלאי נמוך</div><div class="toggle-sub">כשפריט מגיע לסף המינימום</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">ספק ענה</div><div class="toggle-sub">תגובה להצעת מחיר / הזמנה</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">תזכורת הזמנה יומית</div><div class="toggle-sub">08:00 בבוקר אם לא אושרה</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">סיכום יומי</div><div class="toggle-sub">שעה לפי בחירתך · רווח, הוצאות, הזמנות</div></div>
+        <span style="color:var(--green);font-size:12px;">שנה שעה</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">סיכום שבועי</div><div class="toggle-sub">שבת 21:00</div></div>
+        <div class="toggle"></div>
+      </div>
+    </div>
+    <div class="section-header">מצב חירום</div>
+    <div class="alert info" style="margin:0 0 2px;border-radius:0;"><span>ℹ️</span><span style="font-size:11px;">זיהוי חריגות אוטומטי יופעל לאחר 3 חודשי פעילות</span></div>
+    <div style="background:#fff;">
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">סף חירום - תזרים</div><div class="toggle-sub">התראה כשמזומן יורד מ-₪ 5,000</div></div>
+        <span style="color:var(--green);font-size:12px;">שנה</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">אנשי קשר לחירום</div><div class="toggle-sub">רואה חשבון, שותף...</div></div>
+        <span style="color:var(--green);font-size:12px;">ערוך</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">התראת מלאי קריטי</div><div class="toggle-sub">כשפריט מגיע ל-0</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="list-item" style="padding:12px 14px;cursor:pointer;">
+        <div class="list-avatar" style="background:#fed7d7;font-size:20px;">🆘</div>
+        <div class="list-item-content">
+          <div class="list-item-title" style="color:#742a2a;">כפתור חירום</div>
+          <div class="list-item-sub">שלח התראה לכל אנשי הקשר מיידית</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-header">חשבון</div>
+    <div style="background:#fff;">
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">מייל</div><div class="toggle-sub">coffee@gmail.com</div></div>
+        <span style="color:#3b82f6;font-size:12px;">שנה</span>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-left"><div class="toggle-title">סיסמה</div><div class="toggle-sub">••••••••</div></div>
+        <span style="color:#3b82f6;font-size:12px;">שנה</span>
+      </div>
+    </div>
+    <button class="btn" style="background:#fed7d7;color:#742a2a;margin-top:10px;">יציאה מהחשבון</button>
+    <div class="spacer"></div>
+  </div>
+`; }
+
+function buildRecipes() { return sb() + `
+  <div class="top-bar"><div><h1>מתכונים ועלויות</h1></div><button class="icon-btn">＋</button></div>
+  <div class="inner-tabs">
+    <div class="inner-tab active">כל המתכונים</div>
+    <div class="inner-tab">מנות יקרות</div>
+  </div>
+  <div class="screen-content">
+    <div class="alert info"><span>💡</span><span>מסעדה: מרכיבים לכל מנה · ספר/שירות: מגדירים חלק מהאריזה — למשל שמפו ₪100 לבקבוק, השתמשתי ברבע → עלות ₪25</span></div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🥩</div>
+        <div class="list-item-content">
+          <div class="list-item-title">אנטריקוט 300 גרם</div>
+          <div class="list-item-sub">3 מרכיבים | עלות: ₪ 48 | מחיר: ₪ 89</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:13px;font-weight:700;color:#276749;">46%</div>
+          <div style="font-size:9px;color:#718096;">רווח</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="font-size:20px;">🐔</div>
+        <div class="list-item-content">
+          <div class="list-item-title">חזה עוף צלוי</div>
+          <div class="list-item-sub">4 מרכיבים | עלות: ₪ 22 | מחיר: ₪ 52</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:13px;font-weight:700;color:#276749;">58%</div>
+          <div style="font-size:9px;color:#718096;">רווח</div>
+        </div>
+      </div>
+      <div class="list-item" style="cursor:pointer;border:2px dashed #e2e8f0;border-radius:10px;margin:8px 10px;background:#f7fafc;">
+        <div class="list-avatar" style="background:#e2e8f0;font-size:20px;">＋</div>
+        <div class="list-item-content">
+          <div class="list-item-title" style="color:#718096;">הוסף מנה חדשה</div>
+          <div class="list-item-sub">שם מנה → הוסף מרכיבים</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-header">פירוט מרכיבים - אנטריקוט</div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-weight:700;font-size:14px;color:#1a202c;">אנטריקוט 300 גרם</div>
+        <span class="badge green">מחיר מכירה: ₪ 89</span>
+      </div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div class="qty-row" style="padding:8px 0;">
+        <div><div class="qty-name" style="font-size:12px;">🥩 בשר אנטריקוט</div><div class="qty-unit">300 גרם × ₪ 120/ק"ג</div></div>
+        <div style="font-weight:600;color:#2d3748;">₪ 36</div>
+      </div>
+      <div class="qty-row" style="padding:8px 0;border-top:1px solid #f0f4f8;">
+        <div><div class="qty-name" style="font-size:12px;">🧂 תבלינים</div><div class="qty-unit">10 גרם</div></div>
+        <div style="font-weight:600;color:#2d3748;">₪ 2</div>
+      </div>
+      <div class="qty-row" style="padding:8px 0;border-top:1px solid #f0f4f8;">
+        <div><div class="qty-name" style="font-size:12px;">🫒 שמן זית</div><div class="qty-unit">15 מ"ל</div></div>
+        <div style="font-weight:600;color:#2d3748;">₪ 1.5</div>
+      </div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;">
+        <span>סה"כ עלות</span>
+        <span style="color:#e53e3e;">₪ 39.5</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-top:4px;">
+        <span>רווח גולמי</span>
+        <span style="color:#276749;">₪ 49.5 (56%)</span>
+      </div>
+      <button class="btn outline" style="margin:10px 0 0;">+ הוסף מרכיב</button>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('recipes')}
+`; }
+
+function buildCashflow() { return sb() + `
+  <div class="top-bar"><div><h1>תחזית תזרים</h1><div class="top-bar-sub">30 ימים קדימה</div></div><button class="icon-btn">📅</button></div>
+  <div class="screen-content">
+    <div class="card">
+      <div class="card-title">מזומן כרגע</div>
+      <div class="card-value green">₪ 28,400</div>
+      <div class="summary-pill">↑ מול חודש שעבר</div>
+    </div>
+    <div class="alert warning"><span>⚠️</span><span>ב-22 למרץ צפוי חוסר של ₪ 4,200 - שכר + ספקים</span></div>
+    <div class="card">
+      <div class="card-title">תחזית 30 יום</div>
+      <div class="chart-placeholder" style="height:140px;">
+        <div class="chart-bars" style="height:110px;align-items:flex-end;">
+          <div class="bar" style="height:80%;background:#b7dfc6;"></div>
+          <div class="bar" style="height:75%;background:#b7dfc6;"></div>
+          <div class="bar" style="height:85%;background:#b7dfc6;"></div>
+          <div class="bar today" style="height:90%;"></div>
+          <div class="bar" style="height:40%;background:#fbd38d;"></div>
+          <div class="bar" style="height:30%;background:#feb2b2;"></div>
+          <div class="bar" style="height:60%;background:#b7dfc6;"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;font-size:10px;padding:4px 0;color:#718096;">
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;background:#b7dfc6;border-radius:2px;display:inline-block;"></span>בטוח</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;background:#fbd38d;border-radius:2px;display:inline-block;"></span>עיון</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;background:#feb2b2;border-radius:2px;display:inline-block;"></span>חוסר צפוי</span>
+      </div>
+    </div>
+    <div class="section-header">הוצאות קבועות - הוזנו ידנית</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar">🏠</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שכירות</div>
+          <div class="list-item-sub">כל 1 לחודש · <span style="color:var(--green);font-size:10px;">הוזן ידנית</span></div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-weight:700;color:#e53e3e;">- ₪ 12,000</div>
+          <span style="font-size:9px;color:#718096;">קבוע</span>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">⚡</div>
+        <div class="list-item-content">
+          <div class="list-item-title">חשמל</div>
+          <div class="list-item-sub">כל 15 לחודש · <span style="color:var(--green);font-size:10px;">הוזן ידנית</span></div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-weight:700;color:#e53e3e;">- ₪ 3,200</div>
+          <span style="font-size:9px;color:#718096;">קבוע</span>
+        </div>
+      </div>
+      <div class="list-item" style="cursor:pointer;background:#f7fafc;">
+        <div class="list-avatar" style="background:#e2e8f0;">＋</div>
+        <div class="list-item-content"><div class="list-item-title" style="color:#718096;">הוסף הוצאה קבועה</div></div>
+      </div>
+    </div>
+    <div class="section-header">חישוב אוטומטי לפי היסטוריה</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar">👥</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שכר עובדים</div>
+          <div class="list-item-sub">15.3 · <span style="color:#718096;font-size:10px;">מחושב לפי שעות בפועל</span></div>
+        </div>
+        <div style="font-weight:700;color:#e53e3e;">- ₪ 18,000</div>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar">📦</div>
+        <div class="list-item-content">
+          <div class="list-item-title">הזמנות ספקים</div>
+          <div class="list-item-sub">16-18.3 · <span style="color:#718096;font-size:10px;">ממוצע 3 חודשים</span></div>
+        </div>
+        <div style="font-weight:700;color:#e53e3e;">- ₪ 4,200</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${tabBar('money')}
+`; }
+
+function buildEmployeeView() { return sb() + `
+  <div class="top-bar" style="background:var(--green);">
+    <div><h1>שלום, דני 👋</h1><div class="top-bar-sub">קפה הרצוגים</div></div>
+  </div>
+  <div class="screen-content" style="display:flex;flex-direction:column;">
+
+    <!-- מצב: לא במשמרת - כפתור כניסה -->
+    <div class="card" style="margin:20px 10px 10px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">🟢</div>
+      <div class="card-title">לחץ להתחיל משמרת</div>
+      <div class="card-value" style="font-size:18px;color:#718096;">לא במשמרת</div>
+    </div>
+    <button class="btn" style="font-size:16px;padding:18px;">כניסה למשמרת ▶</button>
+
+    <div class="divider" style="margin:16px 14px;"></div>
+
+    <!-- מצב: במשמרת - מוצג אחרי לחיצה -->
+    <div class="card" style="margin:0 10px 10px;text-align:center;border:2px solid var(--green);">
+      <div style="font-size:40px;margin-bottom:6px;">⏱️</div>
+      <div class="card-title">במשמרת כרגע</div>
+      <div class="card-value green" style="font-size:22px;">3:42:18</div>
+      <div class="card-sub">כניסה: 09:15 | יום חמישי 14.3</div>
+    </div>
+    <button class="btn" style="background:#e53e3e;font-size:16px;padding:18px;">יציאה מהמשמרת ⏹</button>
+
+    <!-- סיכום משמרת אחרי יציאה -->
+    <div class="card" style="margin:10px;background:var(--green-light);border:1px solid var(--green);">
+      <div class="card-title" style="color:var(--green);">✅ סיכום משמרת אחרונה</div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;">
+        <div style="font-size:12px;color:#4a5568;">כניסה</div>
+        <div style="font-size:12px;font-weight:600;">09:15</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <div style="font-size:12px;color:#4a5568;">יציאה</div>
+        <div style="font-size:12px;font-weight:600;">17:00</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;border-top:1px solid #c6f6d5;padding-top:6px;">
+        <div style="font-size:13px;font-weight:700;color:var(--green);">סה"כ</div>
+        <div style="font-size:13px;font-weight:700;color:var(--green);">7:45 שעות</div>
+      </div>
+    </div>
+
+    <div class="section-header">היסטוריית משמרות - מרץ</div>
+    <div style="background:#fff;">
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#a0aec0;"></div>
+        <div class="shift-name">10.3 ראשון</div>
+        <div class="shift-time">09:00 - 17:00</div>
+        <div class="shift-hours" style="color:#276749;">8:00</div>
+      </div>
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#a0aec0;"></div>
+        <div class="shift-name">12.3 שלישי</div>
+        <div class="shift-time">09:00 - 17:30</div>
+        <div class="shift-hours" style="color:#276749;">8:30</div>
+      </div>
+      <div class="shift-row">
+        <div class="shift-dot" style="background:#a0aec0;"></div>
+        <div class="shift-name">14.3 חמישי</div>
+        <div class="shift-time">09:15 - 17:00</div>
+        <div class="shift-hours" style="color:#276749;">7:45</div>
+      </div>
+    </div>
+    <div class="card" style="margin:10px;">
+      <div class="card-title">סה"כ שעות החודש</div>
+      <div class="card-value">24:15 שע'</div>
+      <div class="card-sub">3 משמרות בוצעו</div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:12px;color:#718096;">שכר צפוי החודש</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green);">₪ 848</div>
+      </div>
+      <div style="font-size:10px;color:#a0aec0;margin-top:2px;">24.25 שע' × ₪ 35/שעה</div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  <div class="tab-bar" style="padding:6px 0 2px;">
+    <div class="tab-item active" style="font-size:8px;"><span class="tab-icon" style="font-size:16px;">⏱️</span>משמרות</div>
+    <div class="tab-item" style="font-size:8px;color:#a0aec0;"><span class="tab-icon" style="font-size:16px;">👤</span>פרופיל</div>
+  </div>
+`; }
+
+function buildBusinessAudit() { return sb() + `
+  <div class="top-bar" style="background:linear-gradient(135deg,var(--green-dark),var(--green));">
+    <div><h1>📊 Business Audit</h1><div class="top-bar-sub">ניתוח אוטומטי של העסק שלך</div></div>
+  </div>
+  <div class="screen-content">
+
+    <!-- כותרת -->
+    <div style="background:var(--green-light);padding:14px 14px 10px;border-bottom:2px solid var(--gold);">
+      <div style="font-size:12px;color:#718096;margin-bottom:4px;">מתעדכן אוטומטית · מבוסס על הנתונים הנוכחיים</div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);">קפה הרצוגים · 15.3.2026</div>
+    </div>
+
+    <!-- ממוצע הזמנה + פוטנציאל -->
+    <div class="card" style="border-right:4px solid var(--gold);">
+      <div class="card-title">ממוצע הזמנה</div>
+      <div style="display:flex;align-items:flex-end;gap:16px;margin-top:4px;">
+        <div>
+          <div class="card-value">₪ 58</div>
+          <div class="card-sub">כרגע</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:11px;color:#718096;margin-bottom:4px;">פוטנציאל שיפור</div>
+          <div style="font-size:20px;font-weight:800;color:var(--gold);">+ ₪ 12</div>
+          <div style="font-size:10px;color:#718096;">להזמנה</div>
+        </div>
+        <div style="text-align:center;background:var(--green-light);border-radius:10px;padding:8px 12px;">
+          <div style="font-size:10px;color:#718096;">משמעות חודשית</div>
+          <div style="font-size:16px;font-weight:800;color:var(--green);">+ ₪ 32,000</div>
+          <div style="font-size:9px;color:#718096;">הכנסה אפשרית</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- בעיות שהמערכת מצאה -->
+    <div class="section-header">⚠️ בעיות שהמערכת מצאה</div>
+    <div style="background:#fff;">
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fef3c7;font-size:20px;">🕑</div>
+        <div class="list-item-content">
+          <div class="list-item-title">שעות חלשות</div>
+          <div class="list-item-sub">14:00–17:00 · ירידה של 42% במכירות · 4 ימים מתוך 7</div>
+        </div>
+        <span class="badge yellow">דחוף</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fed7d7;font-size:20px;">📉</div>
+        <div class="list-item-content">
+          <div class="list-item-title">3 מנות לא רווחיות</div>
+          <div class="list-item-sub">סלט קיסר, מרק עוף, פסטה שמנת · מרווח מתחת ל-20%</div>
+        </div>
+        <span class="badge red">הפסד</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fed7d7;font-size:20px;">📦</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מוצר מוביל חסר במלאי</div>
+          <div class="list-item-sub">שניצל וינאי · חסר 2 פעמים השבוע · הפסד מכירות: ₪ 860</div>
+        </div>
+        <span class="badge red">הפסד</span>
+      </div>
+      <div class="list-item">
+        <div class="list-avatar" style="background:#fef3c7;font-size:20px;">🗑️</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מלאי שנזרק</div>
+          <div class="list-item-sub">ממוצע שבועי: ₪ 520 · בשר ועגבניות עיקרית</div>
+        </div>
+        <span class="badge yellow">בזבוז</span>
+      </div>
+    </div>
+
+    <!-- ניקוד כולל -->
+    <div class="card" style="margin-top:10px;text-align:center;">
+      <div class="card-title">ניקוד בריאות העסק</div>
+      <div style="font-size:48px;font-weight:800;color:var(--gold);margin:8px 0;">72</div>
+      <div style="font-size:11px;color:#718096;">מתוך 100 · יש מקום לשיפור משמעותי</div>
+      <div style="background:#e2e8f0;border-radius:20px;height:8px;margin:10px 0;overflow:hidden;">
+        <div style="width:72%;height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:20px;"></div>
+      </div>
+    </div>
+
+    <button class="btn" style="margin:6px 10px;">התחל לתקן עם House of Business ←</button>
+    <div class="spacer"></div>
+  </div>
+`; }
+
+function buildFeaturesGuide() {
+  const features = [
+    { icon:'🏠', name:'דשבורד', what:'מבט כולל על העסק בזמן אמת', how:'נכנסים לאפליקציה ורואים הכנסות, הזמנות, שולחנות פתוחים ו-5 ההזמנות האחרונות. התראה אוטומטית אם יש חוסר קריטי במלאי.' },
+    { icon:'🏪', name:'ספקים', what:'ניהול כל ספקי העסק', how:'מוסיפים ספק עם פרטי קשר ומייל. המערכת שולחת הזמנות ישירות לספק לאחר האישור.' },
+    { icon:'📦', name:'מלאי', what:'מעקב אוטומטי אחר כמויות', how:'המלאי יורד אוטומטית לפי מכירות - כל מכירה מנכה את מרכיבי המתכון. בעל העסק בודק פיזית אחת לכמה ימים.' },
+    { icon:'📋', name:'הזמנה יומית', what:'הזמנה חכמה מהספקים', how:'המערכת מציעה כמויות לפי ממוצע היסטורי. מאשרים ← נשלח מייל/WhatsApp לכל ספק אוטומטית. אם לא אושר עד 08:00 - מגיע Push.' },
+    { icon:'🔍', name:'השוואת מחירים', what:'מציאת ספקים זולים יותר', how:'לוחצים "מצא ספק זול יותר" ← AI מחפש באינטרנט ← שולח מייל רשמי ← אם אין תשובה ב-24 שעות (לא כולל שישי-שבת) נשלחת תזכורת אוטומטית.' },
+    { icon:'🍽️', name:'מתכונים ועלויות', what:'חישוב עלות כל מנה', how:'מזינים מנה ← מוסיפים מרכיבים וכמויות. כשמגיעה חשבונית חדשה מהספק - עלות המתכון מתעדכנת אוטומטית.' },
+    { icon:'📊', name:'רווח יומי', what:'כמה באמת הרווחת היום', how:'נשאב מהקופה אוטומטית. מציג מחזור, הוצאות, שכר ורווח נקי אמיתי.' },
+    { icon:'🌊', name:'לאן הלך הכסף', what:'חלוקת הוצאות חודשית', how:'עוגת הוצאות עם פירוט: בשר, שכר, שכירות, שתייה. כולל המלצת AI לחיסכון.' },
+    { icon:'📄', name:'חשבוניות', what:'ניהול חשבוניות ספקים', how:'מצלמים חשבונית ← AI מזהה את הספק ומשייך אוטומטית. ספק לא מזוהה דורש אישור ידני. ייצוא ל-Excel לרואה חשבון.' },
+    { icon:'📈', name:'תחזית תזרים', what:'תחזית מזומן 30 יום קדימה', how:'בעל העסק מזין הוצאות קבועות (שכירות, חשמל) פעם אחת. המערכת מחשבת שכר וספקים לפי היסטוריה.' },
+    { icon:'👥', name:'עובדים', what:'ניהול צוות והרשאות', how:'מוסיפים עובד ← שולחים קישור ← העובד בוחר שם משתמש וסיסמה. בעל עסק מגדיר הרשאות לכל עובד (כניסה/יציאה בלבד, או גישה מלאה למנהל).' },
+    { icon:'⏱️', name:'מסך עובד', what:'כניסה ויציאה ממשמרת', how:'עובד נכנס עם שם משתמש וסיסמה ← לוחץ "כניסה למשמרת" ← בסיום לוחץ "יציאה" ← רואה סיכום שעות המשמרת וסה"כ שעות החודש.' },
+    { icon:'🤖', name:'יועץ AI', what:'יועץ עסקי חכם', how:'שואלים שאלה בחופשיות (למה עלות הבשר גבוהה? כמה להכין מחר?). ה-AI מנתח את נתוני העסק ועונה עם המלצות - לא מבצע פעולות.' },
+    { icon:'⚙️', name:'הגדרות', what:'התאמת המערכת לעסק', how:'שפה (עברית/אנגלית), התראות Push, מצב חירום עם כפתור SOS.' },
+  ];
+  const cards = features.map((f,i) => `
+    <div style="background:#fff;border-radius:12px;margin:8px 10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:36px;height:36px;background:var(--green-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${f.icon}</div>
+        <div style="font-size:14px;font-weight:700;color:var(--green);">${f.name}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:#1a202c;margin-bottom:4px;">מה זה עושה?</div>
+      <div style="font-size:11px;color:#4a5568;margin-bottom:8px;">${f.what}</div>
+      <div style="font-size:12px;font-weight:600;color:#1a202c;margin-bottom:4px;">איך משתמשים?</div>
+      <div style="font-size:11px;color:#4a5568;line-height:1.6;">${f.how}</div>
+    </div>`).join('');
+  return sb() + `
+  <div class="top-bar"><div><h1>מדריך פיצ'רים</h1><div class="top-bar-sub">${features.length} פיצ'רים</div></div></div>
+  <div class="screen-content">${cards}<div class="spacer"></div></div>
+`; }
+
+function buildSupport() { return sb() + `
+  <div class="top-bar"><div><h1>תמיכה ועזרה</h1><div class="top-bar-sub">איך נוכל לעזור?</div></div></div>
+  <div class="screen-content">
+
+    <button class="btn" style="margin:12px 10px 6px;background:var(--green);">💬 שלח הודעה לתמיכה</button>
+    <div style="font-size:10px;color:#718096;text-align:center;margin-bottom:14px;">נחזור אליך בהקדם</div>
+
+    <div class="section-header">❓ בעיות נפוצות ופתרונות</div>
+    <div style="background:#fff;">
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#fef3c7;font-size:18px;">🔌</div>
+        <div class="list-item-content">
+          <div class="list-item-title">הקופה לא מתחברת</div>
+          <div class="list-item-sub">בדוק את פרטי ה-API · נסה לנתק ולחבר מחדש</div>
+        </div>
+        <span style="color:var(--green);font-size:18px;">›</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#fed7d7;font-size:18px;">📧</div>
+        <div class="list-item-content">
+          <div class="list-item-title">מייל לספק לא נשלח</div>
+          <div class="list-item-sub">בדוק שמייל העסק מחובר בחיבורים</div>
+        </div>
+        <span style="color:var(--green);font-size:18px;">›</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#e9d8fd;font-size:18px;">📊</div>
+        <div class="list-item-content">
+          <div class="list-item-title">נתונים לא מתעדכנים</div>
+          <div class="list-item-sub">רענן את החיבור לקופה · בדוק חיבור אינטרנט</div>
+        </div>
+        <span style="color:var(--green);font-size:18px;">›</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#c6f6d5;font-size:18px;">👤</div>
+        <div class="list-item-content">
+          <div class="list-item-title">עובד לא יכול להתחבר</div>
+          <div class="list-item-sub">שלח לו קישור הרשמה חדש מניהול עובדים</div>
+        </div>
+        <span style="color:var(--green);font-size:18px;">›</span>
+      </div>
+      <div class="list-item" style="cursor:pointer;">
+        <div class="list-avatar" style="background:#bee3f8;font-size:18px;">🔔</div>
+        <div class="list-item-content">
+          <div class="list-item-title">לא מקבל התראות Push</div>
+          <div class="list-item-sub">בדוק הרשאות התראות בטלפון · הגדרות באפליקציה</div>
+        </div>
+        <span style="color:var(--green);font-size:18px;">›</span>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+`; }
+</script>
+</body>
+</html>

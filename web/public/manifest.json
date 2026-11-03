@@ -1,0 +1,33 @@
+{
+  "name": "House of Business",
+  "short_name": "HOB",
+  "description": "פלטפורמת ניהול עסקים חכמה",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait-primary",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    { "name": "דשבורד",      "url": "/dashboard",  "description": "מסך ראשי" },
+    { "name": "מלאי",        "url": "/inventory",  "description": "ניהול מלאי" },
+    { "name": "ספקים",       "url": "/suppliers",  "description": "הזמנות לספקים" },
+    { "name": "משמרות",      "url": "/shifts",     "description": "ניהול משמרות" }
+  ]
+}

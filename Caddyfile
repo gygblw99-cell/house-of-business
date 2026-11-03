@@ -1,0 +1,31 @@
+# House of Business — Caddy Reverse Proxy
+# SSL אוטומטי דרך Let's Encrypt
+
+# ── אתר שיווקי ───────────────────────────────────────────────
+houseofbusiness.co.il, www.houseofbusiness.co.il {
+    reverse_proxy localhost:4000
+}
+
+# ── פלטפורמה ─────────────────────────────────────────────────
+app.houseofbusiness.co.il {
+
+    # SSE — timeout ארוך לאירועים בזמן אמת
+    handle /api/events* {
+        reverse_proxy localhost:3001 {
+            flush_interval -1
+            transport http {
+                read_timeout 1h
+            }
+        }
+    }
+
+    # API → Backend
+    handle /api/* {
+        reverse_proxy localhost:3001
+    }
+
+    # Web App → Next.js
+    handle {
+        reverse_proxy localhost:3002
+    }
+}

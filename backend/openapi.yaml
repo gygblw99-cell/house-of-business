@@ -1,0 +1,1515 @@
+openapi: 3.0.3
+info:
+  title: House of Business API
+  version: 1.0.0
+  description: REST API for the House of Business restaurant management platform.
+  contact:
+    email: gygblw99@gmail.com
+
+servers:
+  - url: /api
+    description: Backend API (proxied via Next.js rewrite)
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+
+    Pagination:
+      type: object
+      properties:
+        total:      { type: integer }
+        page:       { type: integer }
+        limit:      { type: integer }
+        totalPages: { type: integer }
+        hasNextPage: { type: boolean }
+        hasPrevPage: { type: boolean }
+
+    User:
+      type: object
+      properties:
+        userId:   { type: string, format: uuid }
+        fullName: { type: string }
+        email:    { type: string, format: email }
+        role:     { type: string, enum: [owner, manager, employee] }
+
+    Business:
+      type: object
+      properties:
+        id:          { type: string, format: uuid }
+        name:        { type: string }
+        type:        { type: string }
+        phone:       { type: string }
+        onboarding_completed: { type: boolean }
+
+    AuthResponse:
+      type: object
+      properties:
+        token:    { type: string }
+        user:     { $ref: '#/components/schemas/User' }
+        business: { $ref: '#/components/schemas/Business' }
+
+    Supplier:
+      type: object
+      properties:
+        id:      { type: string, format: uuid }
+        name:    { type: string }
+        phone:   { type: string }
+        email:   { type: string }
+        balance: { type: number }
+
+    Invoice:
+      type: object
+      properties:
+        id:           { type: string, format: uuid }
+        supplier_id:  { type: string, format: uuid }
+        supplier_name: { type: string }
+        total_amount: { type: number }
+        date:         { type: string, format: date }
+        status:       { type: string, enum: [pending, paid, partial] }
+        items:        { type: array, items: { type: object } }
+
+    Employee:
+      type: object
+      properties:
+        id:         { type: string, format: uuid }
+        full_name:  { type: string }
+        role:       { type: string }
+        hourly_rate: { type: number }
+        is_active:  { type: boolean }
+
+    InventoryItem:
+      type: object
+      properties:
+        id:            { type: string, format: uuid }
+        name:          { type: string }
+        unit:          { type: string }
+        current_qty:   { type: number }
+        min_qty:       { type: number }
+        cost_per_unit: { type: number }
+        category_name: { type: string }
+
+    Dish:
+      type: object
+      properties:
+        id:           { type: string, format: uuid }
+        name:         { type: string }
+        selling_price: { type: number }
+        dish_type:    { type: string }
+        total_cost:   { type: number }
+        margin_pct:   { type: number }
+
+    Recipe:
+      type: object
+      properties:
+        id:          { type: string, format: uuid }
+        name:        { type: string }
+        portions:    { type: integer }
+        cost_total:  { type: number }
+        ingredients: { type: array, items: { type: object } }
+
+    Task:
+      type: object
+      properties:
+        id:          { type: string, format: uuid }
+        title:       { type: string }
+        description: { type: string }
+        status:      { type: string, enum: [pending, in_progress, completed, cancelled] }
+        priority:    { type: string, enum: [low, medium, high, urgent] }
+        due_date:    { type: string, format: date-time }
+        assigned_to: { type: string, format: uuid }
+
+    Reminder:
+      type: object
+      properties:
+        id:              { type: string, format: uuid }
+        title:           { type: string }
+        remind_at:       { type: string, format: date-time }
+        show_on_dashboard: { type: boolean }
+        is_recurring:    { type: boolean }
+        recur_every:     { type: string, enum: [daily, weekly, monthly] }
+
+    Customer:
+      type: object
+      properties:
+        id:          { type: string, format: uuid }
+        name:        { type: string }
+        phone:       { type: string }
+        email:       { type: string }
+        loyalty_points: { type: integer }
+        visit_count: { type: integer }
+
+    Notification:
+      type: object
+      properties:
+        id:         { type: string, format: uuid }
+        title:      { type: string }
+        body:       { type: string }
+        type:       { type: string }
+        is_read:    { type: boolean }
+        created_at: { type: string, format: date-time }
+
+paths:
+  # ── Auth ──────────────────────────────────────────────────────
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new business owner
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, businessName, businessType, phone, email, password]
+              properties:
+                name:         { type: string, maxLength: 100 }
+                businessName: { type: string, maxLength: 200 }
+                businessType: { type: string, enum: [restaurant, cafe, bar, food_truck, bakery, other] }
+                phone:        { type: string }
+                email:        { type: string, format: email }
+                password:     { type: string, minLength: 6 }
+      responses:
+        '201': { description: Registered, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '409': { description: Email already exists, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /auth/login/owner:
+    post:
+      tags: [Auth]
+      summary: Login as business owner
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:    { type: string, format: email }
+                password: { type: string }
+                totpCode: { type: string, description: '6-digit 2FA code (if 2FA enabled)' }
+      responses:
+        '200': { description: Logged in, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '401': { description: Invalid credentials, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /auth/login/employee:
+    post:
+      tags: [Auth]
+      summary: Login as employee
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username: { type: string }
+                password: { type: string }
+      responses:
+        '200': { description: Logged in, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user profile
+      responses:
+        '200': { description: User profile, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+    put:
+      tags: [Auth]
+      summary: Update current user profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName: { type: string }
+                email:    { type: string, format: email }
+                phone:    { type: string }
+      responses:
+        '200': { description: Updated }
+
+  /auth/change-password:
+    put:
+      tags: [Auth]
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPassword, newPassword]
+              properties:
+                currentPassword: { type: string }
+                newPassword:     { type: string, minLength: 6 }
+      responses:
+        '200': { description: Password changed }
+        '401': { description: Wrong current password }
+
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Request password reset OTP
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200': { description: OTP sent (always, to prevent email enumeration) }
+
+  /auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset password with OTP
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, code, newPassword]
+              properties:
+                email:       { type: string, format: email }
+                code:        { type: string }
+                newPassword: { type: string, minLength: 6 }
+      responses:
+        '200': { description: Password reset }
+
+  /auth/2fa/setup:
+    post:
+      tags: [Auth]
+      summary: Generate TOTP secret + QR code
+      responses:
+        '200':
+          description: QR code and base32 secret
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret: { type: string }
+                  qrCode: { type: string, description: data:image/png;base64 URI }
+
+  /auth/2fa/enable:
+    post:
+      tags: [Auth]
+      summary: Enable 2FA after verifying TOTP code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string, minLength: 6, maxLength: 6 }
+      responses:
+        '200': { description: 2FA enabled }
+
+  /auth/2fa/disable:
+    post:
+      tags: [Auth]
+      summary: Disable 2FA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string }
+      responses:
+        '200': { description: 2FA disabled }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (client should delete token)
+      responses:
+        '200': { description: Logged out }
+
+  /auth/sse-token:
+    post:
+      tags: [Auth]
+      summary: Exchange JWT for short-lived SSE token
+      responses:
+        '200':
+          description: SSE token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+
+  # ── Dashboard ────────────────────────────────────────────────
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Main dashboard KPIs
+      responses:
+        '200':
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  revenue:   { type: number }
+                  expenses:  { type: number }
+                  profit:    { type: number }
+                  alerts:    { type: array, items: { type: object } }
+
+  /dashboard/profit-leaks:
+    get:
+      tags: [Dashboard]
+      summary: Profit leak analysis
+      responses:
+        '200': { description: Profit leak items }
+
+  /dashboard/chart:
+    get:
+      tags: [Dashboard]
+      summary: Revenue chart data
+      parameters:
+        - in: query
+          name: days
+          schema: { type: integer, default: 7 }
+      responses:
+        '200': { description: Chart series }
+
+  # ── Suppliers ────────────────────────────────────────────────
+  /suppliers:
+    get:
+      tags: [Suppliers]
+      summary: List suppliers
+      parameters:
+        - { in: query, name: page,  schema: { type: integer } }
+        - { in: query, name: limit, schema: { type: integer } }
+        - { in: query, name: q,     schema: { type: string }, description: Search }
+      responses:
+        '200':
+          description: Suppliers list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Supplier' } }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+    post:
+      tags: [Suppliers]
+      summary: Create supplier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:  { type: string, maxLength: 200 }
+                phone: { type: string }
+                email: { type: string, format: email }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Supplier' } } } }
+
+  /suppliers/{id}:
+    get:
+      tags: [Suppliers]
+      summary: Get supplier by ID
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Supplier }
+        '404': { description: Not found }
+    put:
+      tags: [Suppliers]
+      summary: Update supplier
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Supplier' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Suppliers]
+      summary: Delete supplier
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  /suppliers/orders/daily:
+    get:
+      tags: [Suppliers]
+      summary: Get today's standing orders
+      responses:
+        '200': { description: Daily orders }
+
+  /suppliers/orders/daily/{supplierId}/confirm:
+    post:
+      tags: [Suppliers]
+      summary: Confirm daily order
+      parameters:
+        - { in: path, name: supplierId, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items: { type: array, items: { type: object } }
+      responses:
+        '200': { description: Confirmed }
+
+  # ── Invoices ─────────────────────────────────────────────────
+  /invoices:
+    get:
+      tags: [Invoices]
+      summary: List invoices
+      parameters:
+        - { in: query, name: page,        schema: { type: integer } }
+        - { in: query, name: limit,       schema: { type: integer } }
+        - { in: query, name: supplier_id, schema: { type: string, format: uuid } }
+        - { in: query, name: status,      schema: { type: string } }
+        - { in: query, name: from,        schema: { type: string, format: date } }
+        - { in: query, name: to,          schema: { type: string, format: date } }
+      responses:
+        '200':
+          description: Invoice list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Invoice' } }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+
+  /invoices/{id}:
+    get:
+      tags: [Invoices]
+      summary: Get invoice by ID
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Invoice }
+
+  /invoices/{id}/pdf:
+    get:
+      tags: [Invoices]
+      summary: Download invoice PDF
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: PDF file, content: { application/pdf: { schema: { type: string, format: binary } } } }
+
+  # ── Employees ────────────────────────────────────────────────
+  /employees:
+    get:
+      tags: [Employees]
+      summary: List employees
+      responses:
+        '200':
+          description: Employee list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  employees: { type: array, items: { $ref: '#/components/schemas/Employee' } }
+    post:
+      tags: [Employees]
+      summary: Create employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fullName, role]
+              properties:
+                fullName:   { type: string }
+                role:       { type: string }
+                hourlyRate: { type: number }
+                email:      { type: string, format: email }
+      responses:
+        '201': { description: Created }
+
+  /employees/{id}:
+    put:
+      tags: [Employees]
+      summary: Update employee
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Employee' }
+      responses:
+        '200': { description: Updated }
+
+  /employees/shifts/clock-in:
+    post:
+      tags: [Employees]
+      summary: Clock in to shift
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat: { type: number }
+                lng: { type: number }
+      responses:
+        '200': { description: Shift started }
+
+  /employees/shifts/clock-out:
+    post:
+      tags: [Employees]
+      summary: Clock out of shift
+      responses:
+        '200': { description: Shift ended }
+
+  /employees/{id}/shifts/monthly:
+    get:
+      tags: [Employees]
+      summary: Monthly shift summary for an employee
+      parameters:
+        - { in: path,  name: id,    required: true, schema: { type: string, format: uuid } }
+        - { in: query, name: year,  required: true, schema: { type: integer } }
+        - { in: query, name: month, required: true, schema: { type: integer, minimum: 1, maximum: 12 } }
+      responses:
+        '200': { description: Monthly summary }
+
+  /employees/{id}/expected-salary:
+    get:
+      tags: [Employees]
+      summary: Expected salary for current month
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Salary estimate }
+
+  # ── Inventory ────────────────────────────────────────────────
+  /inventory:
+    get:
+      tags: [Inventory]
+      summary: List inventory items
+      parameters:
+        - { in: query, name: page,     schema: { type: integer } }
+        - { in: query, name: limit,    schema: { type: integer } }
+        - { in: query, name: category, schema: { type: string } }
+        - { in: query, name: q,        schema: { type: string } }
+      responses:
+        '200':
+          description: Inventory list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/InventoryItem' } }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+    post:
+      tags: [Inventory]
+      summary: Create inventory item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, unit]
+              properties:
+                name:         { type: string, maxLength: 200 }
+                unit:         { type: string }
+                current_qty:  { type: number }
+                min_qty:      { type: number }
+                cost_per_unit: { type: number }
+                category:     { type: string }
+      responses:
+        '201': { description: Created }
+
+  /inventory/{id}:
+    put:
+      tags: [Inventory]
+      summary: Update inventory item
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InventoryItem' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Inventory]
+      summary: Delete inventory item
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  /inventory/{id}/transaction:
+    post:
+      tags: [Inventory]
+      summary: Record stock transaction (add/remove/waste)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, qty]
+              properties:
+                type:  { type: string, enum: [add, remove, waste, adjustment] }
+                qty:   { type: number }
+                note:  { type: string }
+      responses:
+        '200': { description: Transaction recorded }
+
+  /inventory/value:
+    get:
+      tags: [Inventory]
+      summary: Total inventory value
+      responses:
+        '200': { description: Value summary }
+
+  /inventory/expiring:
+    get:
+      tags: [Inventory]
+      summary: Items expiring soon
+      parameters:
+        - { in: query, name: days, schema: { type: integer, default: 3 } }
+      responses:
+        '200': { description: Expiring items }
+
+  /inventory/reorder-suggestions:
+    get:
+      tags: [Inventory]
+      summary: AI-powered reorder suggestions
+      responses:
+        '200': { description: Reorder suggestions }
+
+  # ── Dishes ───────────────────────────────────────────────────
+  /dishes:
+    get:
+      tags: [Dishes]
+      summary: List dishes
+      responses:
+        '200':
+          description: Dish list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dishes: { type: array, items: { $ref: '#/components/schemas/Dish' } }
+    post:
+      tags: [Dishes]
+      summary: Create dish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:         { type: string, maxLength: 255 }
+                sellingPrice: { type: number }
+                dishType:     { type: string }
+                notes:        { type: string }
+      responses:
+        '201': { description: Created }
+
+  /dishes/{id}:
+    get:
+      tags: [Dishes]
+      summary: Get dish
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Dish }
+    put:
+      tags: [Dishes]
+      summary: Update dish
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Dish' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Dishes]
+      summary: Delete dish
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  /dishes/{id}/advise:
+    post:
+      tags: [Dishes]
+      summary: AI advice for dish (pricing / marketing / cost reduction)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode: { type: string, enum: [pricing, marketing, cost] }
+      responses:
+        '200': { description: AI advice }
+
+  # ── Recipes ──────────────────────────────────────────────────
+  /recipes:
+    get:
+      tags: [Recipes]
+      summary: List recipes
+      responses:
+        '200':
+          description: Recipe list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recipes: { type: array, items: { $ref: '#/components/schemas/Recipe' } }
+    post:
+      tags: [Recipes]
+      summary: Create recipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:     { type: string }
+                portions: { type: integer, minimum: 1 }
+      responses:
+        '201': { description: Created }
+
+  /recipes/{id}:
+    get:
+      tags: [Recipes]
+      summary: Get recipe
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Recipe }
+    put:
+      tags: [Recipes]
+      summary: Update recipe
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Recipe' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Recipes]
+      summary: Delete recipe
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  /recipes/analysis:
+    get:
+      tags: [Recipes]
+      summary: Menu engineering analysis (Stars / Plow Horses / Puzzles / Dogs)
+      responses:
+        '200': { description: Analysis matrix }
+
+  # ── Finance ──────────────────────────────────────────────────
+  /finance/cashflow:
+    get:
+      tags: [Finance]
+      summary: Cashflow over period
+      parameters:
+        - { in: query, name: days, schema: { type: integer, default: 30 } }
+      responses:
+        '200': { description: Cashflow series }
+
+  /finance/forecast:
+    get:
+      tags: [Finance]
+      summary: Revenue forecast
+      responses:
+        '200': { description: Forecast data }
+
+  /finance/monthly:
+    get:
+      tags: [Finance]
+      summary: Monthly P&L summary
+      parameters:
+        - { in: query, name: year,  required: true, schema: { type: integer } }
+        - { in: query, name: month, required: true, schema: { type: integer } }
+      responses:
+        '200': { description: Monthly summary }
+
+  /finance/expenses:
+    get:
+      tags: [Finance]
+      summary: List recurring expenses
+      parameters:
+        - { in: query, name: page,  schema: { type: integer } }
+        - { in: query, name: limit, schema: { type: integer } }
+      responses:
+        '200': { description: Expense list }
+    post:
+      tags: [Finance]
+      summary: Create expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, amount]
+              properties:
+                name:      { type: string }
+                amount:    { type: number }
+                frequency: { type: string, enum: [monthly, weekly, quarterly, annual] }
+      responses:
+        '201': { description: Created }
+
+  /finance/expenses/{id}:
+    put:
+      tags: [Finance]
+      summary: Update expense
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Finance]
+      summary: Delete expense
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  # ── Payroll ──────────────────────────────────────────────────
+  /payroll:
+    get:
+      tags: [Payroll]
+      summary: List payslips
+      parameters:
+        - { in: query, name: page,  schema: { type: integer } }
+        - { in: query, name: limit, schema: { type: integer } }
+        - { in: query, name: year,  schema: { type: integer } }
+        - { in: query, name: month, schema: { type: integer } }
+      responses:
+        '200': { description: Payslip list }
+
+  /payroll/generate:
+    post:
+      tags: [Payroll]
+      summary: Generate payslips for a month
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [year, month]
+              properties:
+                year:        { type: integer, minimum: 2020, maximum: 2100 }
+                month:       { type: integer, minimum: 1, maximum: 12 }
+                employeeIds: { type: array, items: { type: string, format: uuid } }
+      responses:
+        '200': { description: Payslips generated }
+
+  /payroll/{id}/pdf:
+    get:
+      tags: [Payroll]
+      summary: Download payslip PDF
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: PDF, content: { application/pdf: { schema: { type: string, format: binary } } } }
+
+  # ── Tasks ────────────────────────────────────────────────────
+  /tasks:
+    get:
+      tags: [Tasks]
+      summary: List tasks
+      parameters:
+        - { in: query, name: status,   schema: { type: string } }
+        - { in: query, name: priority, schema: { type: string } }
+        - { in: query, name: page,     schema: { type: integer } }
+      responses:
+        '200':
+          description: Task list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Task' } }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+    post:
+      tags: [Tasks]
+      summary: Create task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:       { type: string, maxLength: 200 }
+                description: { type: string, maxLength: 2000 }
+                priority:    { type: string, enum: [low, medium, high, urgent] }
+                due_date:    { type: string, format: date-time }
+                assigned_to: { type: string, format: uuid }
+      responses:
+        '201': { description: Created }
+
+  /tasks/{id}:
+    get:
+      tags: [Tasks]
+      summary: Get task
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Task }
+    put:
+      tags: [Tasks]
+      summary: Update task
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Task' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Tasks]
+      summary: Delete task
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  # ── Reminders ────────────────────────────────────────────────
+  /reminders:
+    get:
+      tags: [Reminders]
+      summary: List reminders
+      responses:
+        '200':
+          description: Reminder list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reminders: { type: array, items: { $ref: '#/components/schemas/Reminder' } }
+    post:
+      tags: [Reminders]
+      summary: Create reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, remindAt]
+              properties:
+                title:           { type: string, maxLength: 200 }
+                remindAt:        { type: string, format: date-time }
+                showOnDashboard: { type: boolean }
+      responses:
+        '201': { description: Created }
+
+  /reminders/{id}:
+    put:
+      tags: [Reminders]
+      summary: Update reminder
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Reminder' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Reminders]
+      summary: Delete reminder
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  # ── Customers / Loyalty ───────────────────────────────────────
+  /customers:
+    get:
+      tags: [Customers]
+      summary: List customers
+      parameters:
+        - { in: query, name: page,  schema: { type: integer } }
+        - { in: query, name: limit, schema: { type: integer } }
+        - { in: query, name: q,     schema: { type: string } }
+      responses:
+        '200':
+          description: Customer list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Customer' } }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+    post:
+      tags: [Customers]
+      summary: Create customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:  { type: string }
+                phone: { type: string }
+                email: { type: string, format: email }
+      responses:
+        '201': { description: Created }
+
+  /customers/{id}:
+    get:
+      tags: [Customers]
+      summary: Get customer
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Customer }
+    put:
+      tags: [Customers]
+      summary: Update customer
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Customer' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      tags: [Customers]
+      summary: Delete customer
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+
+  /customers/{id}/visit:
+    post:
+      tags: [Customers]
+      summary: Log customer visit / loyalty points
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:         { type: number }
+                points_to_add:  { type: integer }
+                redeem_points:  { type: integer }
+      responses:
+        '200': { description: Visit logged }
+
+  /customers/leaderboard:
+    get:
+      tags: [Customers]
+      summary: Top customers by loyalty points
+      responses:
+        '200': { description: Leaderboard }
+
+  /customers/lookup:
+    get:
+      tags: [Customers]
+      summary: Look up customer by phone number
+      parameters:
+        - { in: query, name: phone, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Customer match }
+        '404': { description: Not found }
+
+  # ── Notifications ─────────────────────────────────────────────
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications
+      responses:
+        '200':
+          description: Notification list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications: { type: array, items: { $ref: '#/components/schemas/Notification' } }
+
+  /notifications/unread-count:
+    get:
+      tags: [Notifications]
+      summary: Unread notification count
+      responses:
+        '200':
+          description: Count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+
+  /notifications/{id}/read:
+    put:
+      tags: [Notifications]
+      summary: Mark notification as read
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Marked read }
+
+  /notifications/read-all:
+    put:
+      tags: [Notifications]
+      summary: Mark all notifications as read
+      responses:
+        '200': { description: All marked read }
+
+  /notifications/token:
+    post:
+      tags: [Notifications]
+      summary: Register FCM push token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fcmToken, platform]
+              properties:
+                fcmToken:  { type: string }
+                platform:  { type: string, enum: [ios, android] }
+      responses:
+        '200': { description: Token registered }
+
+  # ── Queue / Waitlist ──────────────────────────────────────────
+  /queue:
+    get:
+      tags: [Queue]
+      summary: Get current queue
+      responses:
+        '200': { description: Queue entries }
+
+  /queue/join/{businessId}:
+    post:
+      tags: [Queue]
+      summary: Join queue (public — no auth required)
+      security: []
+      parameters:
+        - { in: path, name: businessId, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customerName, phone]
+              properties:
+                customerName: { type: string, maxLength: 80 }
+                phone:        { type: string }
+                partySize:    { type: integer, minimum: 1, maximum: 20, default: 2 }
+                notes:        { type: string, maxLength: 300 }
+      responses:
+        '201':
+          description: Added to queue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  position: { type: integer }
+                  message:  { type: string }
+
+  /queue/{id}/ready:
+    put:
+      tags: [Queue]
+      summary: Mark customer as ready (table available)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Notified }
+
+  /queue/{id}:
+    delete:
+      tags: [Queue]
+      summary: Remove from queue
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Removed }
+
+  # ── AI ────────────────────────────────────────────────────────
+  /ai/chat:
+    post:
+      tags: [AI]
+      summary: Chat with AI business advisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message:   { type: string, maxLength: 4000 }
+                isOffline: { type: boolean }
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply: { type: string }
+
+  /ai/weekly-report/generate:
+    post:
+      tags: [AI]
+      summary: Generate weekly AI report
+      responses:
+        '200': { description: Report generated }
+
+  /ai/weekly-report:
+    get:
+      tags: [AI]
+      summary: Get latest weekly report(s)
+      responses:
+        '200': { description: Weekly report }
+
+  # ── Audit ─────────────────────────────────────────────────────
+  /audit/score:
+    get:
+      tags: [Audit]
+      summary: Current audit score
+      responses:
+        '200':
+          description: Score
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  score: { type: number }
+
+  /audit/run:
+    post:
+      tags: [Audit]
+      summary: Run a new audit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fromDate: { type: string, format: date }
+                toDate:   { type: string, format: date }
+      responses:
+        '200': { description: Audit results }
+
+  /audit/latest:
+    get:
+      tags: [Audit]
+      summary: Get latest audit report
+      responses:
+        '200': { description: Latest audit }
+
+  # ── Reviews ───────────────────────────────────────────────────
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: List reviews
+      responses:
+        '200': { description: Review list }
+
+  /reviews/analyze:
+    post:
+      tags: [Reviews]
+      summary: Batch analyze reviews with AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reviews:  { type: array, items: { type: object } }
+                platform: { type: string, enum: [google, tripadvisor, wolt, tenbis, mishloha, facebook, other] }
+      responses:
+        '200': { description: Analysis }
+
+  # ── Price Comparison ──────────────────────────────────────────
+  /price-comparison/search:
+    post:
+      tags: [Analytics]
+      summary: AI-powered supplier price comparison
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string, maxLength: 500 }
+      responses:
+        '200': { description: Price comparison results }
+
+  # ── Fraud Detection ───────────────────────────────────────────
+  /fraud/alerts:
+    get:
+      tags: [Analytics]
+      summary: Fraud / anomaly detection alerts
+      parameters:
+        - { in: query, name: days, schema: { type: integer, default: 30 } }
+      responses:
+        '200': { description: Fraud alerts }
+
+  # ── Guardian (Business Health) ───────────────────────────────
+  /guardian/status:
+    get:
+      tags: [Guardian]
+      summary: Business guardian health status
+      responses:
+        '200': { description: Guardian status }
+
+  # ── Z-Report ──────────────────────────────────────────────────
+  /zreport/import:
+    post:
+      tags: [POS]
+      summary: Import Z-report (POS end-of-day)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        '200': { description: Z-report imported }
+
+  /zreport/summary:
+    get:
+      tags: [POS]
+      summary: Z-report summaries
+      parameters:
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to,   schema: { type: string, format: date } }
+      responses:
+        '200': { description: Z-report data }
+
+  # ── Export ────────────────────────────────────────────────────
+  /export/invoices:
+    get:
+      tags: [Export]
+      summary: Export invoices to Excel
+      parameters:
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to,   schema: { type: string, format: date } }
+      responses:
+        '200': { description: Excel file, content: { application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: { schema: { type: string, format: binary } } } }
+
+  /export/payroll:
+    get:
+      tags: [Export]
+      summary: Export payroll to Excel
+      parameters:
+        - { in: query, name: year,  required: true, schema: { type: integer } }
+        - { in: query, name: month, required: true, schema: { type: integer } }
+      responses:
+        '200': { description: Excel file }
+
+  # ── Sync ─────────────────────────────────────────────────────
+  /sync/pull:
+    get:
+      tags: [Sync]
+      summary: Pull latest data for offline sync
+      parameters:
+        - { in: query, name: since, schema: { type: string, format: date-time } }
+      responses:
+        '200': { description: Sync payload }
+
+  # ── Health ────────────────────────────────────────────────────
+  /health:
+    get:
+      tags: [System]
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: Server healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }

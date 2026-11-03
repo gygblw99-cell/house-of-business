@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hob_postgres_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       house_of_business
+      POSTGRES_USER:     hob_user
+      POSTGRES_PASSWORD: hob_pass_2026
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./backend/db/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/db/migrations/002_onboarding.sql:/docker-entrypoint-initdb.d/02_onboarding.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hob_user -d house_of_business"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: hob_redis_dev
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: hob_backend_dev
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV:       development
+      PORT:           3000
+      DATABASE_URL:   postgres://hob_user:hob_pass_2026@postgres:5432/house_of_business
+      REDIS_URL:      redis://redis:6379
+      JWT_SECRET:     dev_jwt_secret_change_in_prod
+      ALLOWED_ORIGINS: http://localhost,http://localhost:3000,http://localhost:3002
+      OPENWEATHER_API_KEY: ""
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost/api
+    container_name: hob_web_dev
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: hob_nginx_dev
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - web
+
+volumes:
+  postgres_dev_data:

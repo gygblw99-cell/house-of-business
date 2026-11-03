@@ -1,0 +1,63 @@
+# Secrets — never commit these
+.env
+.env.local
+.env.production
+.env.development
+.env.staging
+.env*.local
+**/.env
+**/.env.*
+!**/.env.example
+# Extra guards
+**/secrets.json
+**/credentials.json
+**/service-account*.json
+**/firebase*.json
+
+# Dependencies
+node_modules/
+backend/node_modules/
+web/node_modules/
+mobile/node_modules/
+
+# Uploads
+backend/uploads/
+uploads/
+
+# Build
+web/.next/
+web/out/
+website/.next/
+website/out/
+website/node_modules/
+
+# Logs
+logs/
+*.log
+
+# DB backups (docker-compose "backup" service writes here)
+backups/
+
+# קבצי עיבוד זמניים
+temp/
+
+# Jupyter
+ipynb
+*.ipynb
+
+# System
+.DS_Store
+Thumbs.db
+data.xlsx
+generate_z_reports.js
+*.ipynb
+*.xlsx
+
+# Test coverage
+backend/coverage/
+
+# Build artefacts — regenerated on every build, tracked by accident
+*.tsbuildinfo
+
+# Claude Code session scratch — published artifacts, not project files
+.claude/artifacts/
